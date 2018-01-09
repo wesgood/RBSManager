@@ -8,6 +8,16 @@
 import UIKit
 import ObjectMapper
 
-class BaseMessage: NSObject {
-
+class RBSMessage: NSObject, Mappable {
+    var datePublished: Date?
+    var dateReceived: Date?
+    
+    required init?(map: Map) {
+        super.init()
+        mapping(map: map)
+    }
+    
+    func mapping(map: Map) {
+        // overridden
+    }
 }

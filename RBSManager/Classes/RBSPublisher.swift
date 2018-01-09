@@ -10,7 +10,7 @@ import ObjectMapper
 
 class RBSPublisher: NSObject {
     var manager: RBSManager
-    var messageClass: Mappable
+    var messageClass: Mappable.Type
     var messageType: String
     var topic: String
     
@@ -21,7 +21,7 @@ class RBSPublisher: NSObject {
     // ROS specific options
     var publisherId: String?
     
-    init(manager m: RBSManager, topic t: String, messageType mt: String, messageClass mc: Mappable) {
+    init(manager m: RBSManager, topic t: String, messageType mt: String, messageClass mc: Mappable.Type) {
         self.manager = m
         self.topic = t
         self.messageClass = mc

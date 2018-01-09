@@ -10,7 +10,7 @@ import ObjectMapper
 
 class RBSSubscriber: NSObject {
     var manager: RBSManager
-    var messageClass: Mappable
+    var messageClass: Mappable.Type
     var topic: String
     var callback: ((_ message: Mappable) -> (Void))
     
@@ -26,7 +26,7 @@ class RBSSubscriber: NSObject {
     var fragmentSize: Int?
     var compression: String?
     
-    init(manager m: RBSManager, topic t: String, messageClass mc: Mappable, callback c: @escaping (_ message: Mappable) -> (Void)) {
+    init(manager m: RBSManager, topic t: String, messageClass mc: Mappable.Type, callback c: @escaping (_ message: Mappable) -> (Void)) {
         self.manager = m
         self.topic = t
         self.messageClass = mc

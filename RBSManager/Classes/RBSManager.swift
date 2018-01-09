@@ -45,14 +45,14 @@ class RBSManager: NSObject, WebSocketDelegate {
     // MARK: ROSBridge objects
     
     /// create a subscriber and add to the array
-    func addSubscriber(topic: String, messageClass: Mappable, response: @escaping ((_ message: Mappable) -> (Void))) -> RBSSubscriber {
+    func addSubscriber(topic: String, messageClass: Mappable.Type, response: @escaping ((_ message: Mappable) -> (Void))) -> RBSSubscriber {
         let subscriber = RBSSubscriber(manager: self, topic: topic, messageClass: messageClass, callback: response)
         subscribers.append(subscriber)
         return subscriber
     }
     
     /// create a publisher and add to the array
-    func addPublisher(topic: String, messageType: String, messageClass: Mappable) -> RBSPublisher {
+    func addPublisher(topic: String, messageType: String, messageClass: Mappable.Type) -> RBSPublisher {
         let publisher = RBSPublisher(manager: self, topic: topic, messageType: messageType, messageClass: messageClass)
         publishers.append(publisher)
         return publisher
@@ -122,6 +122,7 @@ class RBSManager: NSObject, WebSocketDelegate {
                 })
             }
             socket = WebSocket(url: url)
+            socket.callbackQueue = DispatchQueue(label: "rbsmanager_socket")
             socket.delegate = self
             socket.connect()
         } else {
@@ -153,11 +154,36 @@ class RBSManager: NSObject, WebSocketDelegate {
     }
     
     func postSubscriberData(_ data: [String : Any]) {
+        // map the provided dictionary into the correct models
+        let subscriberId = data["id"] as? String
+        let topic = data["topic"] as? String
         
+        for subscriber in subscribers {
+            if ((subscriber.subscriberId != nil && subscriber.subscriberId == subscriberId) || subscriber.subscriberId == nil) && subscriber.topic == topic {
+                // use the provided message type to generate a new instance
+                let messageType = subscriber.messageClass
+                let map = Map.init(mappingType: .fromJSON, JSON: data)
+                if let message = messageType.init(map: map) {
+                    DispatchQueue.main.async {
+                        subscriber.callback(message)
+                    }
+                }
+            }
+        }
     }
     
     func postServiceCallData(_ data: [String : Any]) {
+        // map the provided dictionary into the correct models
+        let serviceId = data["id"] as? String
+        let service = data["service"] as? String
         
+        for serviceCall in serviceCalls {
+            if ((serviceCall.serviceId != nil && serviceCall.serviceId == serviceId) || serviceCall.serviceId == nil) && serviceCall.service == service {
+                DispatchQueue.main.async {
+                    serviceCall.responseCallback?(data)
+                }
+            }
+        }
     }
     
     // MARK: WebSocket delegate methods
@@ -176,15 +202,24 @@ class RBSManager: NSObject, WebSocketDelegate {
     }
     
     func websocketDidReceiveMessage(socket: WebSocketClient, text: String) {
-        let response = Mapper<[String : Any]>().map(JSONString: text) {
-            if let op = response["op"] as? String {
-                if op == "publish" {
-                    // handle the subscription response
-                    postSubscriberData(response)
-                } else if op == "service_response" {
-                    // handle the service response
-                    postServiceCallData(response)
-                }
+        // deserialize first to know what to do
+        var dictionary: [String : Any]?
+        if let data = text.data(using: .utf8) {
+            do {
+                dictionary = try JSONSerialization.jsonObject(with: data, options: []) as? [String: Any]
+            } catch {
+                print(error.localizedDescription)
+            }
+        }
+        
+        // process the dictionary
+        if let op = dictionary?["op"] as? String {
+            if op == "publish" {
+                // handle the subscription response
+                postSubscriberData(dictionary!)
+            } else if op == "service_response" {
+                // handle the service response
+                postServiceCallData(dictionary!)
             }
         }
     }

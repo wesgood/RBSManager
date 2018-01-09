@@ -14,7 +14,7 @@ class RBSServiceCall: NSObject {
     var dataArgument: [String : String]?
     var messageArgument: Mappable?
     var arrayArgument: [Any]?
-    var responseCallback: ((_ data: [String : String]) -> (Void))?
+    var responseCallback: ((_ data: [String : Any]) -> (Void))?
     
     // ROS specific options
     var fragmentSize: Int?
@@ -27,7 +27,7 @@ class RBSServiceCall: NSObject {
     }
     
     /// send a service call and optionally handle the response
-    func send(_ response: ((_ data: [String : String]) -> (Void))?) {
+    func send(_ response: ((_ data: [String : Any]) -> (Void))?) {
         self.responseCallback = response
         
         // build the dictionary to send to ROS
