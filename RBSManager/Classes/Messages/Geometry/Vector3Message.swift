@@ -9,9 +9,9 @@ import UIKit
 import ObjectMapper
 
 public class Vector3Message: RBSMessage {
-    var x: Float?
-    var y: Float?
-    var z: Float?
+    public var x: Float = 0
+    public var y: Float = 0
+    public var z: Float = 0
     
     override public func mapping(map: Map) {
         x <- map["x"]

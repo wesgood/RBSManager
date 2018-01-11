@@ -9,12 +9,12 @@ import UIKit
 import ObjectMapper
 
 public class PoseMessage: RBSMessage {
-    var x: Float?
-    var y: Float?
-    var theta: Float?
+    public var x: Float?
+    public var y: Float?
+    public var theta: Float?
     
-    var linearVelocity: Float?
-    var angularVelocity: Float?
+    public var linearVelocity: Float?
+    public var angularVelocity: Float?
     
     override public func mapping(map: Map) {
         x <- map["x"]

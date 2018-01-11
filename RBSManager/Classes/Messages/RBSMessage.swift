@@ -9,13 +9,15 @@ import UIKit
 import ObjectMapper
 
 public class RBSMessage: NSObject, Mappable {
-    var datePublished: Date?
-    var dateReceived: Date?
+    public var datePublished: Date?
+    public var dateReceived: Date?
     
-    required public init?(map: Map) {
+    public required init?(map: Map) {
         super.init()
         mapping(map: map)
     }
+    
+    public override init() {}
     
     public func mapping(map: Map) {
         // overridden

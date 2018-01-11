@@ -11,17 +11,17 @@ import ObjectMapper
 
 private let _sharedManager = RBSManager()
 
-protocol RBSManagerDelegate {
-    func manager(_ manager: RBSManager, didDisconnect: Error?)
+public protocol RBSManagerDelegate {
+    func manager(_ manager: RBSManager, didDisconnect error: Error?)
     func managerDidTimeout(_ manager: RBSManager)
     func managerDidConnect(_ manager: RBSManager)
 }
 
 public class RBSManager: NSObject, WebSocketDelegate {
     var socket: WebSocket!
-    var delegate: RBSManagerDelegate?
+    public var delegate: RBSManagerDelegate?
     var host: String?
-    var connected: Bool = false
+    public var connected: Bool = false
     
     // socket handling
     var timeoutTimer: Timer?
@@ -32,7 +32,7 @@ public class RBSManager: NSObject, WebSocketDelegate {
     var subscribers: [RBSSubscriber]
     var serviceCalls: [RBSServiceCall]
     
-    class func sharedManager() -> RBSManager {
+    public class func sharedManager() -> RBSManager {
         return _sharedManager
     }
     
@@ -45,35 +45,35 @@ public class RBSManager: NSObject, WebSocketDelegate {
     // MARK: ROSBridge objects
     
     /// create a subscriber and add to the array
-    func addSubscriber(topic: String, messageClass: Mappable.Type, response: @escaping ((_ message: Mappable) -> (Void))) -> RBSSubscriber {
+    public func addSubscriber(topic: String, messageClass: RBSMessage.Type, response: @escaping ((_ message: RBSMessage.Type) -> (Void))) -> RBSSubscriber {
         let subscriber = RBSSubscriber(manager: self, topic: topic, messageClass: messageClass, callback: response)
         subscribers.append(subscriber)
         return subscriber
     }
     
     /// create a publisher and add to the array
-    func addPublisher(topic: String, messageType: String, messageClass: Mappable.Type) -> RBSPublisher {
+    public func addPublisher(topic: String, messageType: String, messageClass: RBSMessage.Type) -> RBSPublisher {
         let publisher = RBSPublisher(manager: self, topic: topic, messageType: messageType, messageClass: messageClass)
         publishers.append(publisher)
         return publisher
     }
     
     /// make a service call object
-    func makeServiceCall(service: String) -> RBSServiceCall {
+    public func makeServiceCall(service: String) -> RBSServiceCall {
         let serviceCall = RBSServiceCall(manager: self, service: service)
         serviceCalls.append(serviceCall)
         return serviceCall
     }
     
     /// create a service call to set a parameter
-    func setParam(name: String, value: Any) -> RBSServiceCall {
+    public func setParam(name: String, value: Any) -> RBSServiceCall {
         let serviceCall = makeServiceCall(service: "/rosapi/set_param")
         serviceCall.arrayArgument = [name, value]
         return serviceCall
     }
     
     /// create a service call to get a parameter
-    func getParam(name: String) -> RBSServiceCall {
+    public func getParam(name: String) -> RBSServiceCall {
         let serviceCall = makeServiceCall(service: "/rosapi/get_param")
         return serviceCall
     }
@@ -103,7 +103,7 @@ public class RBSManager: NSObject, WebSocketDelegate {
     }
     
     // MARK: Socket handling
-    func connect(address: String) throws {
+    public func connect(address: String) throws {
         // validate the address
         var addressString = address
         if !addressString.starts(with: "ws://") {
@@ -130,7 +130,7 @@ public class RBSManager: NSObject, WebSocketDelegate {
         }
     }
     
-    func disconnect() {
+    public func disconnect() {
         removePublishers()
         removeSubscribers()
         socket?.disconnect()

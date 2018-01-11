@@ -10,9 +10,9 @@ import ObjectMapper
 
 public class RBSSubscriber: NSObject {
     var manager: RBSManager
-    var messageClass: Mappable.Type
+    var messageClass: RBSMessage.Type
     var topic: String
-    var callback: ((_ message: Mappable) -> (Void))
+    var callback: ((_ message: RBSMessage.Type) -> (Void))
     
     // configuration options
     var active: Bool = false
@@ -26,7 +26,7 @@ public class RBSSubscriber: NSObject {
     var fragmentSize: Int?
     var compression: String?
     
-    init(manager m: RBSManager, topic t: String, messageClass mc: Mappable.Type, callback c: @escaping (_ message: Mappable) -> (Void)) {
+    init(manager m: RBSManager, topic t: String, messageClass mc: RBSMessage.Type, callback c: @escaping (_ message: RBSMessage.Type) -> (Void)) {
         self.manager = m
         self.topic = t
         self.messageClass = mc
@@ -34,7 +34,7 @@ public class RBSSubscriber: NSObject {
     }
     
     /// Tell ROSBridge to begin passing messages when they are received
-    func subscribe() {
+    public func subscribe() {
         self.active = true
         
         // build the dictionary to send to ROS
@@ -72,7 +72,7 @@ public class RBSSubscriber: NSObject {
     }
     
     /// Tell ROS to stop sending messages
-    func unsubscribe() {
+    public func unsubscribe() {
         self.active = false
         
         var data = [

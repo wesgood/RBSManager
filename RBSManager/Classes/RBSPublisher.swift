@@ -10,7 +10,7 @@ import ObjectMapper
 
 public class RBSPublisher: NSObject {
     var manager: RBSManager
-    var messageClass: Mappable.Type
+    var messageClass: RBSMessage.Type
     var messageType: String
     var topic: String
     
@@ -21,7 +21,7 @@ public class RBSPublisher: NSObject {
     // ROS specific options
     var publisherId: String?
     
-    init(manager m: RBSManager, topic t: String, messageType mt: String, messageClass mc: Mappable.Type) {
+    init(manager m: RBSManager, topic t: String, messageType mt: String, messageClass mc: RBSMessage.Type) {
         self.manager = m
         self.topic = t
         self.messageClass = mc
@@ -29,7 +29,7 @@ public class RBSPublisher: NSObject {
     }
     
     /// add the message to a container and send to manager for transmit
-    func publish(_ message: Mappable) {
+    public func publish(_ message: Mappable) {
         let container = RBSMessageContainer(message, topic: topic)
         
         if let publisherIdOption = publisherId {
@@ -40,7 +40,7 @@ public class RBSPublisher: NSObject {
     }
     
     /// advertise this publisher on ROS
-    func advertise() {
+    public func advertise() {
         self.active = true
         
         var data = [
@@ -57,7 +57,7 @@ public class RBSPublisher: NSObject {
     }
     
     /// remove this publisher from ROS to stop sending messages
-    func unadvertise() {
+    public func unadvertise() {
         self.active = false
         
         var data = [

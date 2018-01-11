@@ -27,7 +27,7 @@ public class RBSServiceCall: NSObject {
     }
     
     /// send a service call and optionally handle the response
-    func send(_ response: ((_ data: [String : Any]) -> (Void))?) {
+    public func send(_ response: ((_ data: [String : Any]) -> (Void))?) {
         self.responseCallback = response
         
         // build the dictionary to send to ROS
