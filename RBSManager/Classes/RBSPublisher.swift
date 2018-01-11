@@ -29,7 +29,7 @@ public class RBSPublisher: NSObject {
     }
     
     /// add the message to a container and send to manager for transmit
-    public func publish(_ message: Mappable) {
+    public func publish(_ message: RBSMessage) {
         let container = RBSMessageContainer(message, topic: topic)
         
         if let publisherIdOption = publisherId {

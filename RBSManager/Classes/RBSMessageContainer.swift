@@ -10,7 +10,7 @@ import ObjectMapper
 
 public class RBSMessageContainer: NSObject, Mappable {
     var op = "publish"
-    var msg: Mappable?
+    var msg: RBSMessage?
     var topic: String?
     var publisherId: String?
     
@@ -18,7 +18,7 @@ public class RBSMessageContainer: NSObject, Mappable {
     
     }
     
-    init(_ msg: Mappable, topic t: String) {
+    init(_ msg: RBSMessage, topic t: String) {
         self.msg = msg
         self.topic = t
     }

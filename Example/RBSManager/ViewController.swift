@@ -33,8 +33,8 @@ class ViewController: UIViewController, RBSManagerDelegate {
     var turtleSubscriber: RBSSubscriber?
     
     // data handling
-    let linearSpeed: Float = 0.75
-    let angularSpeed: Float = Float.pi/8
+    let linearSpeed: Float = 1.25
+    let angularSpeed: Float = Float.pi/4
     
     // user settings
     var socketHost: String?
@@ -63,11 +63,6 @@ class ViewController: UIViewController, RBSManagerDelegate {
             self.updateWithMessage(message as! PoseMessage)
         })
         turtleSubscriber?.messageType = "turtlesim/Pose"
-        
-        // if the socket host is empty, present the option to enter the value
-        if socketHost == nil {
-            onHostButton()
-        }
     }
 
     override func didReceiveMemoryWarning() {
@@ -87,7 +82,7 @@ class ViewController: UIViewController, RBSManagerDelegate {
     
     @objc func onResetButton() {
         // reset the turtle sim with a service call
-        let serviceCall = turtleManager?.makeServiceCall(service: "/turtlesim/reset")
+        let serviceCall = turtleManager?.makeServiceCall(service: "/reset")
         serviceCall?.send(nil)
     }
     
@@ -138,9 +133,9 @@ class ViewController: UIViewController, RBSManagerDelegate {
             }
         } else {
             if button == leftButton {
-                message.angular?.z = -angularSpeed
-            } else {
                 message.angular?.z = angularSpeed
+            } else {
+                message.angular?.z = -angularSpeed
             }
         }
         
@@ -161,11 +156,12 @@ class ViewController: UIViewController, RBSManagerDelegate {
                 }
             } else {
                 // print log error
-                print("Missing socket host value")
+                print("Missing socket host value --> use host button")
             }
         }
     }
     
+    // update interface for the different connection statuses
     func updateButtonStates(_ connected: Bool) {
         leftButton.isEnabled = connected
         rightButton.isEnabled = connected
@@ -187,11 +183,17 @@ class ViewController: UIViewController, RBSManagerDelegate {
         turtleXLabel.text = String(describing: message.x ?? 0)
         turtleYLabel.text = String(describing: message.y ?? 0)
         turtleThetaLabel.text = String(describing: message.theta ?? 0)
+        
+        // rotate the turtle for fun
+        UIView.animate(withDuration: 0.25, animations: {
+            // add 90 deg due to the image orientation
+            self.turtleIconImage.transform = CGAffineTransform(rotationAngle: -CGFloat(message.theta! - (Float.pi/2)))
+        })
     }
     
     func updateToolbarItems() {
         if turtleManager?.connected == true {
-            toolbar.setItems([resetButton!, flexibleToolbarSpace!, hostButton!], animated: false)
+            toolbar.setItems([resetButton!], animated: false)
         } else {
             toolbar.setItems([flexibleToolbarSpace!, hostButton!], animated: false)
         }
