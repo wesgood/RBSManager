@@ -8,7 +8,7 @@
 import UIKit
 import ObjectMapper
 
-class PoseMessage: RBSMessage {
+public class PoseMessage: RBSMessage {
     var x: Float?
     var y: Float?
     var theta: Float?
@@ -16,10 +16,10 @@ class PoseMessage: RBSMessage {
     var linearVelocity: Float?
     var angularVelocity: Float?
     
-    override func mapping(map: Map) {
+    override public func mapping(map: Map) {
         x <- map["x"]
         y <- map["y"]
-        z <- map["z"]
+        theta <- map["theta"]
         
         linearVelocity <- map["linear_velocity"]
         angularVelocity <- map["angular_velocity"]

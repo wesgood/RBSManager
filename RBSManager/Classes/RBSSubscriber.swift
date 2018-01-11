@@ -8,7 +8,7 @@
 import UIKit
 import ObjectMapper
 
-class RBSSubscriber: NSObject {
+public class RBSSubscriber: NSObject {
     var manager: RBSManager
     var messageClass: Mappable.Type
     var topic: String

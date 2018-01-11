@@ -8,11 +8,11 @@
 import UIKit
 import ObjectMapper
 
-class TwistMessage: RBSMessage {
+public class TwistMessage: RBSMessage {
     var linear: Vector3Message?
     var angular: Vector3Message?
     
-    override func mapping(map: Map) {
+    override public func mapping(map: Map) {
         linear <- map["linear"]
         angular <- map["angular"]
     }

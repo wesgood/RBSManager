@@ -8,12 +8,12 @@
 import UIKit
 import ObjectMapper
 
-class Vector3Message: RBSMessage {
+public class Vector3Message: RBSMessage {
     var x: Float?
     var y: Float?
     var z: Float?
     
-    override func mapping(map: Map) {
+    override public func mapping(map: Map) {
         x <- map["x"]
         y <- map["y"]
         z <- map["z"]

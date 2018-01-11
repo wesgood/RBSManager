@@ -17,7 +17,7 @@ protocol RBSManagerDelegate {
     func managerDidConnect(_ manager: RBSManager)
 }
 
-class RBSManager: NSObject, WebSocketDelegate {
+public class RBSManager: NSObject, WebSocketDelegate {
     var socket: WebSocket!
     var delegate: RBSManagerDelegate?
     var host: String?
@@ -187,7 +187,7 @@ class RBSManager: NSObject, WebSocketDelegate {
     }
     
     // MARK: WebSocket delegate methods
-    func websocketDidConnect(socket: WebSocketClient) {
+    public func websocketDidConnect(socket: WebSocketClient) {
         self.connected = true
         self.timeoutTimer?.invalidate()
         self.advertisePublishers()
@@ -195,13 +195,13 @@ class RBSManager: NSObject, WebSocketDelegate {
         self.delegate?.managerDidConnect(self)
     }
     
-    func websocketDidDisconnect(socket: WebSocketClient, error: Error?) {
+    public func websocketDidDisconnect(socket: WebSocketClient, error: Error?) {
         self.connected = false
         self.delegate?.manager(self, didDisconnect: error)
         self.socket = nil
     }
     
-    func websocketDidReceiveMessage(socket: WebSocketClient, text: String) {
+    public func websocketDidReceiveMessage(socket: WebSocketClient, text: String) {
         // deserialize first to know what to do
         var dictionary: [String : Any]?
         if let data = text.data(using: .utf8) {
@@ -224,7 +224,7 @@ class RBSManager: NSObject, WebSocketDelegate {
         }
     }
     
-    func websocketDidReceiveData(socket: WebSocketClient, data: Data) {
+    public func websocketDidReceiveData(socket: WebSocketClient, data: Data) {
         
     }
 }

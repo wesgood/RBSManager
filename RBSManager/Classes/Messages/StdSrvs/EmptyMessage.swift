@@ -7,6 +7,6 @@
 
 import UIKit
 
-class EmptyMessage: RBSMessage {
+public class EmptyMessage: RBSMessage {
 
 }

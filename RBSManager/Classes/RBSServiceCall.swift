@@ -8,7 +8,7 @@
 import UIKit
 import ObjectMapper
 
-class RBSServiceCall: NSObject {
+public class RBSServiceCall: NSObject {
     var manager: RBSManager
     var service: String
     var dataArgument: [String : String]?

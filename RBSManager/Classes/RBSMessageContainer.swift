@@ -8,13 +8,13 @@
 import UIKit
 import ObjectMapper
 
-class RBSMessageContainer: NSObject, Mappable {
+public class RBSMessageContainer: NSObject, Mappable {
     var op = "publish"
     var msg: Mappable?
     var topic: String?
     var publisherId: String?
     
-    required init?(map: Map) {
+    required public init?(map: Map) {
     
     }
     
@@ -23,7 +23,7 @@ class RBSMessageContainer: NSObject, Mappable {
         self.topic = t
     }
     
-    func mapping(map: Map) {
+    public func mapping(map: Map) {
         self.op <- map["op"]
         self.msg <- map["msg"]
         self.topic <- map["topic"]
