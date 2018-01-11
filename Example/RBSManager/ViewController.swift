@@ -17,6 +17,9 @@ class ViewController: UIViewController, RBSManagerDelegate {
     @IBOutlet var upButton: UIButton!
     @IBOutlet var rightButton: UIButton!
     @IBOutlet var downButton: UIButton!
+    var hostButton: UIBarButtonItem?
+    var resetButton: UIBarButtonItem?
+    var flexibleToolbarSpace: UIBarButtonItem?
     
     // turtle outputs
     @IBOutlet var turtleIconImage: UIImageView!
@@ -42,12 +45,27 @@ class ViewController: UIViewController, RBSManagerDelegate {
         turtleManager?.delegate = self
         updateButtonStates(false)
         
+        // load settings to retrieve the stored host value
+        loadSettings()
+        
+        // add toolbar buttons
+        resetButton = UIBarButtonItem(title: "Reset", style: .plain, target: self, action: #selector(onResetButton))
+        hostButton = UIBarButtonItem(title: "Host", style: .plain, target: self, action: #selector(onHostButton))
+        flexibleToolbarSpace = UIBarButtonItem(barButtonSystemItem: .flexibleSpace, target: nil, action: nil)
+        updateToolbarItems()
+        
+        
         // create the publisher and subscriber
         turtlePublisher = turtleManager?.addPublisher(topic: "turtle1/cmd_vel", messageType: "geometry_msgs/Twist", messageClass: TwistMessage.self)
         turtleSubscriber = turtleManager?.addSubscriber(topic: "turtle1/pose", messageClass: PoseMessage.self, response: { (message) -> (Void) in
             // update the view with message data
             updateWithMessage(message)
         })
+        
+        // if the socket host is empty, present the option to enter the value
+        if socketHost == nil {
+            onHostButton()
+        }
     }
 
     override func didReceiveMemoryWarning() {
@@ -55,8 +73,45 @@ class ViewController: UIViewController, RBSManagerDelegate {
         // Dispose of any resources that can be recreated.
     }
     
+    func loadSettings() {
+        let defaults = UserDefaults.standard
+        socketHost = defaults.string(forKey: "socket_host")
+    }
+    
+    func saveSettings() {
+        let defaults = UserDefaults.standard
+        defaults.set(socketHost, forKey: "socket_host")
+    }
+    
+    @objc func onResetButton() {
+        // reset the turtle sim with a service call
+        let serviceCall = turtleManager?.makeServiceCall(service: "reset")
+        serviceCall?.send(nil)
+    }
+    
+    @objc func onHostButton() {
+        // change the host used by the websocket
+        let alertController = UIAlertController(title: "Enter socket host", message: "IP or name of ROS master", preferredStyle: UIAlertControllerStyle.alert)
+        alertController.addTextField { (textField : UITextField) -> Void in
+            textField.placeholder = "Host"
+            textField.text = self.socketHost
+        }
+        let cancelAction = UIAlertAction(title: "Cancel", style: UIAlertActionStyle.cancel) { (result : UIAlertAction) -> Void in
+        }
+        let okAction = UIAlertAction(title: "OK", style: UIAlertActionStyle.default) { (result : UIAlertAction) -> Void in
+            if let textField = alertController.textFields?.first {
+                self.socketHost = textField.text
+                self.saveSettings()
+            }
+        }
+        alertController.addAction(cancelAction)
+        alertController.addAction(okAction)
+        self.present(alertController, animated: true, completion: nil)
+    }
+    
     func managerDidConnect(_ manager: RBSManager) {
         updateButtonStates(true)
+        updateToolbarItems()
     }
     
     func managerDidTimeout(_ manager: RBSManager) {
@@ -66,6 +121,7 @@ class ViewController: UIViewController, RBSManagerDelegate {
     
     func manager(_ manager: RBSManager, didDisconnect error: Error?) {
         updateButtonStates(false)
+        updateToolbarItems()
         print(error?.localizedDescription ?? "connection did disconnect")
     }
     
@@ -129,6 +185,14 @@ class ViewController: UIViewController, RBSManagerDelegate {
         turtleXLabel.text = String(describing: message.x ?? 0)
         turtleYLabel.text = String(describing: message.y ?? 0)
         turtleThetaLabel.text = String(describing: message.theta ?? 0)
+    }
+    
+    func updateToolbarItems() {
+        if turtleManager?.connected == true {
+            toolbar.setItems([resetButton!, flexibleToolbarSpace!, hostButton!], animated: false)
+        } else {
+            toolbar.setItems([flexibleToolbarSpace!, hostButton!], animated: false)
+        }
     }
 }
 
