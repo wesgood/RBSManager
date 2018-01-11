@@ -10,23 +10,23 @@ import ObjectMapper
 
 public class RBSSubscriber: NSObject {
     var manager: RBSManager
-    var messageClass: RBSMessage.Type
-    var topic: String
-    var callback: ((_ message: RBSMessage.Type) -> (Void))
+    public var messageClass: RBSMessage.Type
+    public var topic: String
+    var callback: ((_ message: RBSMessage) -> (Void))
     
     // configuration options
-    var active: Bool = false
-    var tag: String?
+    public var active: Bool = false
+    public var tag: String?
     
     // ROS specific options
-    var messageType: String?
-    var subscriberId: String?
-    var throttleRate: Int?
-    var queueLength: Int?
-    var fragmentSize: Int?
-    var compression: String?
+    public var messageType: String?
+    public var subscriberId: String?
+    public var throttleRate: Int?
+    public var queueLength: Int?
+    public var fragmentSize: Int?
+    public var compression: String?
     
-    init(manager m: RBSManager, topic t: String, messageClass mc: RBSMessage.Type, callback c: @escaping (_ message: RBSMessage.Type) -> (Void)) {
+    init(manager m: RBSManager, topic t: String, messageClass mc: RBSMessage.Type, callback c: @escaping (_ message: RBSMessage) -> (Void)) {
         self.manager = m
         self.topic = t
         self.messageClass = mc

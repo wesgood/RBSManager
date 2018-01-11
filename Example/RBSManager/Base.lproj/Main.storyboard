@@ -23,7 +23,7 @@
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                         <subviews>
                             <toolbar opaque="NO" clearsContextBeforeDrawing="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="zBX-0b-xbx">
-                                <rect key="frame" x="0.0" y="0.0" width="375" height="44"/>
+                                <rect key="frame" x="0.0" y="20" width="375" height="44"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="44" id="Lgb-Qj-SJI"/>
                                 </constraints>
@@ -156,8 +156,8 @@
                             <constraint firstItem="2fi-mo-0CV" firstAttribute="top" secondItem="IWl-vD-0X0" secondAttribute="bottom" id="0fr-be-6Bv"/>
                             <constraint firstItem="IWl-vD-0X0" firstAttribute="top" secondItem="CxH-v8-6jW" secondAttribute="bottom" constant="30" id="3gw-8o-r7f"/>
                             <constraint firstAttribute="trailing" secondItem="zBX-0b-xbx" secondAttribute="trailing" id="4Oy-PO-hA4"/>
-                            <constraint firstItem="zBX-0b-xbx" firstAttribute="top" secondItem="kh9-bI-dsS" secondAttribute="top" id="GrE-a8-UDP"/>
                             <constraint firstItem="qzh-FK-ylm" firstAttribute="centerX" secondItem="kh9-bI-dsS" secondAttribute="centerX" id="R62-p0-GgB"/>
+                            <constraint firstItem="zBX-0b-xbx" firstAttribute="top" secondItem="jyV-Pf-zRb" secondAttribute="bottom" id="Xoh-fb-UKW"/>
                             <constraint firstItem="zBX-0b-xbx" firstAttribute="leading" secondItem="kh9-bI-dsS" secondAttribute="leading" id="gTw-Hy-lFT"/>
                             <constraint firstAttribute="trailingMargin" secondItem="vWX-OQ-Z2f" secondAttribute="trailing" constant="100" id="h1I-Mr-cMQ"/>
                             <constraint firstAttribute="trailing" secondItem="CxH-v8-6jW" secondAttribute="trailing" id="hQw-uC-KUw"/>
@@ -169,6 +169,7 @@
                             <constraint firstAttribute="trailing" secondItem="IWl-vD-0X0" secondAttribute="trailing" id="uxZ-rP-XPD"/>
                         </constraints>
                     </view>
+                    <extendedEdge key="edgesForExtendedLayout"/>
                     <connections>
                         <outlet property="connectButton" destination="IWl-vD-0X0" id="aBH-AO-hJv"/>
                         <outlet property="downButton" destination="RVb-AP-Oaf" id="J5h-yH-T3P"/>

@@ -45,7 +45,7 @@ public class RBSManager: NSObject, WebSocketDelegate {
     // MARK: ROSBridge objects
     
     /// create a subscriber and add to the array
-    public func addSubscriber(topic: String, messageClass: RBSMessage.Type, response: @escaping ((_ message: RBSMessage.Type) -> (Void))) -> RBSSubscriber {
+    public func addSubscriber(topic: String, messageClass: RBSMessage.Type, response: @escaping ((_ message: RBSMessage) -> (Void))) -> RBSSubscriber {
         let subscriber = RBSSubscriber(manager: self, topic: topic, messageClass: messageClass, callback: response)
         subscribers.append(subscriber)
         return subscriber
@@ -145,7 +145,14 @@ public class RBSManager: NSObject, WebSocketDelegate {
     
     /// Convert a dictionary to JSON and send through the socket
     func sendData(dictionary: [String : Any]) {
-        // TODO
+        // ignore the Mapper for now
+        if let jsonData = try? JSONSerialization.data(
+            withJSONObject: dictionary,
+            options: []) {
+            if let jsonString = String(data: jsonData, encoding: .ascii) {
+                socket?.write(string: jsonString)
+            }
+        }
     }
     
     /// Send a JSON string through the socket
@@ -162,10 +169,12 @@ public class RBSManager: NSObject, WebSocketDelegate {
             if ((subscriber.subscriberId != nil && subscriber.subscriberId == subscriberId) || subscriber.subscriberId == nil) && subscriber.topic == topic {
                 // use the provided message type to generate a new instance
                 let messageType = subscriber.messageClass
-                let map = Map.init(mappingType: .fromJSON, JSON: data)
-                if let message = messageType.init(map: map) {
-                    DispatchQueue.main.async {
-                        subscriber.callback(message)
+                if let messageData = data["msg"] as? [String : Any] {
+                    let map = Map.init(mappingType: .fromJSON, JSON: messageData)
+                    if let message = messageType.init(map: map) {
+                        DispatchQueue.main.async {
+                            subscriber.callback(message)
+                        }
                     }
                 }
             }
@@ -192,12 +201,16 @@ public class RBSManager: NSObject, WebSocketDelegate {
         self.timeoutTimer?.invalidate()
         self.advertisePublishers()
         self.attachSubscribers()
-        self.delegate?.managerDidConnect(self)
+        DispatchQueue.main.async {
+            self.delegate?.managerDidConnect(self)
+        }
     }
     
     public func websocketDidDisconnect(socket: WebSocketClient, error: Error?) {
         self.connected = false
-        self.delegate?.manager(self, didDisconnect: error)
+        DispatchQueue.main.async {
+            self.delegate?.manager(self, didDisconnect: error)
+        }
         self.socket = nil
     }
     

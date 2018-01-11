@@ -41,6 +41,7 @@ class ViewController: UIViewController, RBSManagerDelegate {
 
     override func viewDidLoad() {
         super.viewDidLoad()
+        self.edgesForExtendedLayout = []
         turtleManager = RBSManager.sharedManager()
         turtleManager?.delegate = self
         updateButtonStates(false)
@@ -56,11 +57,12 @@ class ViewController: UIViewController, RBSManagerDelegate {
         
         
         // create the publisher and subscriber
-        turtlePublisher = turtleManager?.addPublisher(topic: "turtle1/cmd_vel", messageType: "geometry_msgs/Twist", messageClass: TwistMessage.self)
-        turtleSubscriber = turtleManager?.addSubscriber(topic: "turtle1/pose", messageClass: PoseMessage.self, response: { (message) -> (Void) in
+        turtlePublisher = turtleManager?.addPublisher(topic: "/turtle1/cmd_vel", messageType: "geometry_msgs/Twist", messageClass: TwistMessage.self)
+        turtleSubscriber = turtleManager?.addSubscriber(topic: "/turtle1/pose", messageClass: PoseMessage.self, response: { (message) -> (Void) in
             // update the view with message data
-            updateWithMessage(message)
+            self.updateWithMessage(message as! PoseMessage)
         })
+        turtleSubscriber?.messageType = "turtlesim/Pose"
         
         // if the socket host is empty, present the option to enter the value
         if socketHost == nil {
@@ -85,7 +87,7 @@ class ViewController: UIViewController, RBSManagerDelegate {
     
     @objc func onResetButton() {
         // reset the turtle sim with a service call
-        let serviceCall = turtleManager?.makeServiceCall(service: "reset")
+        let serviceCall = turtleManager?.makeServiceCall(service: "/turtlesim/reset")
         serviceCall?.send(nil)
     }
     
@@ -171,11 +173,11 @@ class ViewController: UIViewController, RBSManagerDelegate {
         upButton.isEnabled = connected
         
         if connected {
-            let redColor = UIColor(red: 0.329, green: 0.729, blue: 0.273, alpha: 1.0)
+            let redColor = UIColor(red: 0.729, green: 0.131, blue: 0.144, alpha: 1.0)
             connectButton.backgroundColor = redColor
             connectButton.setTitle("DISCONNECT", for: .normal)
         } else {
-            let greenColor = UIColor(red: 0.729, green: 0.131, blue: 0.144, alpha: 1.0)
+            let greenColor = UIColor(red: 0.329, green: 0.729, blue: 0.273, alpha: 1.0)
             connectButton.backgroundColor = greenColor
             connectButton.setTitle("CONNECT", for: .normal)
         }
