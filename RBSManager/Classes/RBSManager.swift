@@ -24,12 +24,12 @@ public enum RBSManagerError: Int {
 public class RBSManager: NSObject, WebSocketDelegate {
     var socket: WebSocket!
     public var delegate: RBSManagerDelegate?
-    var host: String?
+    public var host: String?
     public var connected: Bool = false
     
     // socket handling
     var timeoutTimer: Timer?
-    var timeout: Double = 0
+    public var timeout: Double = 0
     
     // ROS handling
     var publishers: [RBSPublisher]

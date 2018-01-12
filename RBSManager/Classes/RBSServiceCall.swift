@@ -10,16 +10,16 @@ import ObjectMapper
 
 public class RBSServiceCall: NSObject {
     var manager: RBSManager
-    var service: String
-    var dataArgument: [String : String]?
-    var messageArgument: Mappable?
-    var arrayArgument: [Any]?
+    public var service: String
+    public var dataArgument: [String : String]?
+    public var messageArgument: Mappable?
+    public var arrayArgument: [Any]?
     var responseCallback: ((_ data: [String : Any]) -> (Void))?
     
     // ROS specific options
-    var fragmentSize: Int?
-    var compression: String?
-    var serviceId: String?
+    public var fragmentSize: Int?
+    public var compression: String?
+    public var serviceId: String?
     
     init(manager m: RBSManager, service s: String) {
         self.manager = m

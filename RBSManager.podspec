@@ -9,7 +9,7 @@
 Pod::Spec.new do |s|
   s.name             = 'RBSManager'
   s.version          = '0.1.0'
-  s.summary          = 'A short description of RBSManager.'
+  s.summary          = 'RBSManager is a Swift native tool to connect to ROSBridge servers using Websockets.'
 
 # This description is used to generate tags and improve search results.
 #   * Think: What does it do? Why did you write it? What is the focus?
@@ -18,7 +18,7 @@ Pod::Spec.new do |s|
 #   * Finally, don't worry about the indent, CocoaPods strips it!
 
   s.description      = <<-DESC
-TODO: Add long description of the pod here.
+RBSManager is a continuation of my previous project, RBManager, to provide an iOS compatible library to make mobile connections to ROS easier. By handling the socket connection, JSON serialization and message processing automatically, users can get back to making their robots more useful.
                        DESC
 
   s.homepage         = 'https://github.com/wesgood/RBSManager'

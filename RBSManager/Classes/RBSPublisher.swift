@@ -10,16 +10,16 @@ import ObjectMapper
 
 public class RBSPublisher: NSObject {
     var manager: RBSManager
-    var messageClass: RBSMessage.Type
-    var messageType: String
-    var topic: String
+    public var messageClass: RBSMessage.Type
+    public var messageType: String
+    public var topic: String
     
     // configuration options
-    var active: Bool = false
-    var tag: String?
+    public var active: Bool = false
+    public var tag: String?
     
     // ROS specific options
-    var publisherId: String?
+    public var publisherId: String?
     
     init(manager m: RBSManager, topic t: String, messageType mt: String, messageClass mc: RBSMessage.Type) {
         self.manager = m
