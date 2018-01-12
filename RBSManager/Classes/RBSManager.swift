@@ -13,8 +13,12 @@ private let _sharedManager = RBSManager()
 
 public protocol RBSManagerDelegate {
     func manager(_ manager: RBSManager, didDisconnect error: Error?)
-    func managerDidTimeout(_ manager: RBSManager)
     func managerDidConnect(_ manager: RBSManager)
+    func manager(_ manager: RBSManager, threwError error: Error)
+}
+
+public enum RBSManagerError: Int {
+    case InvalidUrl = 500, SocketError, TimeoutError, JSONSerializerError, JSONDeserializerError
 }
 
 public class RBSManager: NSObject, WebSocketDelegate {
@@ -103,7 +107,7 @@ public class RBSManager: NSObject, WebSocketDelegate {
     }
     
     // MARK: Socket handling
-    public func connect(address: String) throws {
+    public func connect(address: String) {
         // validate the address
         var addressString = address
         if !addressString.starts(with: "ws://") {
@@ -118,7 +122,8 @@ public class RBSManager: NSObject, WebSocketDelegate {
                     // send the delegate method
                     self.connected = false
                     self.socket = nil
-                    self.delegate?.managerDidTimeout(self)
+                    let error = self.createError("Connection timed out", code: RBSManagerError.TimeoutError.rawValue)
+                    self.delegate?.manager(self, threwError: error)
                 })
             }
             socket = WebSocket(url: url)
@@ -126,7 +131,8 @@ public class RBSManager: NSObject, WebSocketDelegate {
             socket.delegate = self
             socket.connect()
         } else {
-            throw "Requested websocket URL is invalid"
+            let error = createError("Requested websocket URL is invalid", code: RBSManagerError.InvalidUrl.rawValue)
+            self.delegate?.manager(self, threwError: error)
         }
     }
     
@@ -134,6 +140,13 @@ public class RBSManager: NSObject, WebSocketDelegate {
         removePublishers()
         removeSubscribers()
         socket?.disconnect()
+    }
+    
+    /// create an error object
+    func createError(_ detail: String, code: Int) -> Error {
+        var details = [String: String]()
+        details[NSLocalizedDescriptionKey] =  detail
+        return NSError(domain: "RBSManagerError", code: code, userInfo: details) as Error
     }
     
     /// Convert an object to JSON and send through the socket
@@ -152,6 +165,9 @@ public class RBSManager: NSObject, WebSocketDelegate {
             if let jsonString = String(data: jsonData, encoding: .ascii) {
                 socket?.write(string: jsonString)
             }
+        } else {
+            let error = createError("unable to generate JSON", code: RBSManagerError.JSONSerializerError.rawValue)
+            self.delegate?.manager(self, threwError: error)
         }
     }
     
@@ -174,6 +190,11 @@ public class RBSManager: NSObject, WebSocketDelegate {
                     if let message = messageType.init(map: map) {
                         DispatchQueue.main.async {
                             subscriber.callback(message)
+                        }
+                    } else {
+                        let error = createError("unable to generate object of type \(messageType.description)", code: RBSManagerError.JSONDeserializerError.rawValue)
+                        DispatchQueue.main.async {
+                            self.delegate?.manager(self, threwError: error)
                         }
                     }
                 }
@@ -240,9 +261,4 @@ public class RBSManager: NSObject, WebSocketDelegate {
     public func websocketDidReceiveData(socket: WebSocketClient, data: Data) {
         
     }
-}
-
-// MARK: Extensions
-extension String: LocalizedError {
-    public var errorDescription: String? { return self }
 }

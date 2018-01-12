@@ -33,8 +33,8 @@ class ViewController: UIViewController, RBSManagerDelegate {
     var turtleSubscriber: RBSSubscriber?
     
     // data handling
-    let linearSpeed: Float = 1.25
-    let angularSpeed: Float = Float.pi/4
+    let linearSpeed: Float64 = 1.25
+    let angularSpeed: Float64 = Float64.pi/4
     
     // user settings
     var socketHost: String?
@@ -111,9 +111,11 @@ class ViewController: UIViewController, RBSManagerDelegate {
         updateToolbarItems()
     }
     
-    func managerDidTimeout(_ manager: RBSManager) {
-        updateButtonStates(false)
-        print("connection did timeout")
+    func manager(_ manager: RBSManager, threwError error: Error) {
+        if (manager.connected == false) {
+            updateButtonStates(false)
+        }
+        print(error.localizedDescription)
     }
     
     func manager(_ manager: RBSManager, didDisconnect error: Error?) {
@@ -148,12 +150,8 @@ class ViewController: UIViewController, RBSManagerDelegate {
             turtleManager?.disconnect()
         } else {
             if socketHost != nil {
-                // the connection requires a valid URL and will throw an error if it is invalid
-                do {
-                    try turtleManager?.connect(address: socketHost!)
-                } catch {
-                    print(error.localizedDescription)
-                }
+                // the manager will produce a delegate error if the socket host is invalid
+                turtleManager?.connect(address: socketHost!)
             } else {
                 // print log error
                 print("Missing socket host value --> use host button")
