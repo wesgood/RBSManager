@@ -1,6 +1,5 @@
 # RBSManager
 
-[![CI Status](http://img.shields.io/travis/wesgood/RBSManager.svg?style=flat)](https://travis-ci.org/wesgood/RBSManager)
 [![Version](https://img.shields.io/cocoapods/v/RBSManager.svg?style=flat)](http://cocoapods.org/pods/RBSManager)
 [![License](https://img.shields.io/cocoapods/l/RBSManager.svg?style=flat)](http://cocoapods.org/pods/RBSManager)
 [![Platform](https://img.shields.io/cocoapods/p/RBSManager.svg?style=flat)](http://cocoapods.org/pods/RBSManager)
@@ -30,6 +29,9 @@ To run the example project, clone the repo, and run `pod install` from the Examp
 * control a turtle using left, right, up, down buttons to demonstrate publishing a message
 * reset the turtlesim using a service call demonstration
 * accept dynamic host values
+* configure the background using a custom modal colour picker and set parameter service calls
+* teleport a turtle with an alert view and service calls using a message object
+* click multiple directions simultaneously (easier on a device) to properly steer the turtle around
 
 ## Requirements
 
@@ -133,7 +135,6 @@ Use the regular send callback to receive data.
 ## Roadmap
 This library changes a lot of things from my previous work and will definitely be in progress for some time. Please take that caveat into account when building a project and reach out to me if there is a feature you think the library is missing.
 
-* validate and improve the message response system for service calls
 * populate all standard ROS message types
 * improve the handling of multiple subscribers/publishers by generating random IDs if not provided
 

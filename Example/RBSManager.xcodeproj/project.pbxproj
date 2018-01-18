@@ -227,7 +227,6 @@
 					};
 					607FACE41AFB9204008FA782 = {
 						CreatedOnToolsVersion = 6.3.1;
-						DevelopmentTeam = MCN8WVN6QQ;
 						LastSwiftMigration = 0900;
 						ProvisioningStyle = Manual;
 						TestTargetID = 607FACCF1AFB9204008FA782;
@@ -572,7 +571,7 @@
 			baseConfigurationReference = 248F742A580D21842138CA95 /* Pods-RBSManager_Tests.debug.xcconfig */;
 			buildSettings = {
 				CODE_SIGN_STYLE = Manual;
-				DEVELOPMENT_TEAM = MCN8WVN6QQ;
+				DEVELOPMENT_TEAM = "";
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(SDKROOT)/Developer/Library/Frameworks",
 					"$(inherited)",
