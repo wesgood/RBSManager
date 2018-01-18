@@ -82,6 +82,14 @@ public class RBSManager: NSObject, WebSocketDelegate {
         return serviceCall
     }
     
+    /// batch multiple service calls together
+    public func sendMultipleServiceCalls(_ calls: [RBSServiceCall]) {
+        for call in calls {
+            call.send(nil)
+        }
+    }
+    
+    
     func advertisePublishers() {
         for publisher in publishers {
             publisher.advertise()

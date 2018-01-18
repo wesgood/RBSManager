@@ -14,6 +14,8 @@
 		607FACE01AFB9204008FA782 /* LaunchScreen.xib in Resources */ = {isa = PBXBuildFile; fileRef = 607FACDE1AFB9204008FA782 /* LaunchScreen.xib */; };
 		607FACEC1AFB9204008FA782 /* Tests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 607FACEB1AFB9204008FA782 /* Tests.swift */; };
 		80DFB99189859557EF5C8015 /* Pods_RBSManager_Example.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 24886E96F26198D0709540EB /* Pods_RBSManager_Example.framework */; };
+		8359F5D6201030F4009B4DED /* ModalContainerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8359F5D5201030F4009B4DED /* ModalContainerView.swift */; };
+		8359F5D820103111009B4DED /* ColorPickerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8359F5D720103111009B4DED /* ColorPickerView.swift */; };
 		E78EBA0F2221026FC8592078 /* Pods_RBSManager_Tests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 16E6774D401ADE44BDB63FCC /* Pods_RBSManager_Tests.framework */; };
 /* End PBXBuildFile section */
 
@@ -44,6 +46,8 @@
 		607FACEA1AFB9204008FA782 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		607FACEB1AFB9204008FA782 /* Tests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Tests.swift; sourceTree = "<group>"; };
 		6ABD57CD0F4B07BDDAC40D53 /* README.md */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = net.daringfireball.markdown; name = README.md; path = ../README.md; sourceTree = "<group>"; };
+		8359F5D5201030F4009B4DED /* ModalContainerView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ModalContainerView.swift; sourceTree = "<group>"; };
+		8359F5D720103111009B4DED /* ColorPickerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ColorPickerView.swift; sourceTree = "<group>"; };
 		CCCA9576A14757C6CDF5C58A /* Pods-RBSManager_Example.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-RBSManager_Example.debug.xcconfig"; path = "Pods/Target Support Files/Pods-RBSManager_Example/Pods-RBSManager_Example.debug.xcconfig"; sourceTree = "<group>"; };
 		CF91211383514296CD29081A /* Pods-RBSManager_Tests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-RBSManager_Tests.release.xcconfig"; path = "Pods/Target Support Files/Pods-RBSManager_Tests/Pods-RBSManager_Tests.release.xcconfig"; sourceTree = "<group>"; };
 		F1200DEF9E98726D04B7079C /* LICENSE */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text; name = LICENSE; path = ../LICENSE; sourceTree = "<group>"; };
@@ -93,6 +97,8 @@
 		607FACD21AFB9204008FA782 /* Example for RBSManager */ = {
 			isa = PBXGroup;
 			children = (
+				8359F5D5201030F4009B4DED /* ModalContainerView.swift */,
+				8359F5D720103111009B4DED /* ColorPickerView.swift */,
 				607FACD51AFB9204008FA782 /* AppDelegate.swift */,
 				607FACD71AFB9204008FA782 /* ViewController.swift */,
 				607FACD91AFB9204008FA782 /* Main.storyboard */,
@@ -374,7 +380,9 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				8359F5D820103111009B4DED /* ColorPickerView.swift in Sources */,
 				607FACD81AFB9204008FA782 /* ViewController.swift in Sources */,
+				8359F5D6201030F4009B4DED /* ModalContainerView.swift in Sources */,
 				607FACD61AFB9204008FA782 /* AppDelegate.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

@@ -9,7 +9,7 @@
 import UIKit
 import RBSManager
 
-class ViewController: UIViewController, RBSManagerDelegate {
+class ViewController: UIViewController, RBSManagerDelegate, ColorPickerDelegate {
     // user interface
     @IBOutlet var toolbar: UIToolbar!
     @IBOutlet var connectButton: UIButton!
@@ -218,7 +218,29 @@ class ViewController: UIViewController, RBSManagerDelegate {
     }
     
     @IBAction func onBackgroundButton() {
-        // reset the background colour
+        // reset the background colour using parameters
+        let colorView = ColorPickerView()
+        colorView.colourDelegate = self
+        colorView.show()
+    }
+    
+    func didSelectColour(picker: ColorPickerView, colour: UIColor?) {
+        if let colourObject = colour {
+            let rgbColour = colourObject.cgColor
+            if let rgbColours = rgbColour.components {
+                let red = Int(rgbColours[0]*255)
+                let green = Int(rgbColours[1]*255)
+                let blue = Int(rgbColours[2]*255)
+                
+                let redServiceCall = turtleManager?.setParam(name: "background_r", value: String(describing: red))
+                let greenServiceCall = turtleManager?.setParam(name: "background_g", value: String(describing: green))
+                let blueServiceCall = turtleManager?.setParam(name: "background_b", value: String(describing: blue))
+                let clearServiceCall = turtleManager?.makeServiceCall(service: "/clear")
+            
+                // batch the service calls together
+                turtleManager?.sendMultipleServiceCalls([redServiceCall!, greenServiceCall!, blueServiceCall!, clearServiceCall!])
+            }
+        }
     }
     
     // send the teleport operation
