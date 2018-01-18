@@ -29,7 +29,7 @@
                                 </constraints>
                                 <items/>
                             </toolbar>
-                            <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" spacing="5" translatesAutoresizingMaskIntoConstraints="NO" id="vWX-OQ-Z2f">
+                            <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" spacing="5" translatesAutoresizingMaskIntoConstraints="NO" id="vWX-OQ-Z2f" userLabel="Info Stack View">
                                 <rect key="frame" x="116" y="255" width="143" height="71.5"/>
                                 <subviews>
                                     <stackView opaque="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="emU-h9-Zkh">
@@ -100,35 +100,39 @@
                                     <action selector="onConnectButton" destination="vXZ-lx-hvc" eventType="touchUpInside" id="8Cv-2n-5tS"/>
                                 </connections>
                             </button>
-                            <stackView opaque="NO" contentMode="scaleToFill" distribution="fillEqually" translatesAutoresizingMaskIntoConstraints="NO" id="CxH-v8-6jW">
+                            <stackView opaque="NO" contentMode="scaleToFill" distribution="fillEqually" translatesAutoresizingMaskIntoConstraints="NO" id="CxH-v8-6jW" userLabel="Button Stack View">
                                 <rect key="frame" x="0.0" y="547" width="375" height="48"/>
                                 <subviews>
                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="fz1-gW-RId">
                                         <rect key="frame" x="0.0" y="0.0" width="94" height="48"/>
                                         <state key="normal" image="left_icon"/>
                                         <connections>
-                                            <action selector="onDirectionButton:" destination="vXZ-lx-hvc" eventType="touchUpInside" id="z2T-Ny-DmS"/>
+                                            <action selector="onDirectionButtonDown:" destination="vXZ-lx-hvc" eventType="touchDown" id="iUM-J8-gq9"/>
+                                            <action selector="onDirectionButtonUp:" destination="vXZ-lx-hvc" eventType="touchUpInside" id="QJj-Yf-CH3"/>
                                         </connections>
                                     </button>
                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="ap5-MZ-nbu">
                                         <rect key="frame" x="94" y="0.0" width="93.5" height="48"/>
                                         <state key="normal" image="right_icon"/>
                                         <connections>
-                                            <action selector="onDirectionButton:" destination="vXZ-lx-hvc" eventType="touchUpInside" id="1nR-3x-IM6"/>
+                                            <action selector="onDirectionButtonDown:" destination="vXZ-lx-hvc" eventType="touchDown" id="3mO-sk-BWL"/>
+                                            <action selector="onDirectionButtonUp:" destination="vXZ-lx-hvc" eventType="touchUpInside" id="Bup-yF-ISL"/>
                                         </connections>
                                     </button>
                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Wwt-ET-sjp">
                                         <rect key="frame" x="187.5" y="0.0" width="94" height="48"/>
                                         <state key="normal" image="up_icon"/>
                                         <connections>
-                                            <action selector="onDirectionButton:" destination="vXZ-lx-hvc" eventType="touchUpInside" id="EUI-6d-cjl"/>
+                                            <action selector="onDirectionButtonDown:" destination="vXZ-lx-hvc" eventType="touchDown" id="Kh1-3r-NMK"/>
+                                            <action selector="onDirectionButtonUp:" destination="vXZ-lx-hvc" eventType="touchUpInside" id="AKn-as-s6f"/>
                                         </connections>
                                     </button>
                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="RVb-AP-Oaf">
                                         <rect key="frame" x="281.5" y="0.0" width="93.5" height="48"/>
                                         <state key="normal" image="down_icon"/>
                                         <connections>
-                                            <action selector="onDirectionButton:" destination="vXZ-lx-hvc" eventType="touchUpInside" id="Kj3-xw-7FA"/>
+                                            <action selector="onDirectionButtonDown:" destination="vXZ-lx-hvc" eventType="touchDown" id="Hct-wV-5hC"/>
+                                            <action selector="onDirectionButtonUp:" destination="vXZ-lx-hvc" eventType="touchUpInside" id="KWB-OH-YPn"/>
                                         </connections>
                                     </button>
                                 </subviews>
@@ -150,14 +154,61 @@
                                     <constraint firstAttribute="width" constant="100" id="zuL-bZ-raR"/>
                                 </constraints>
                             </imageView>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Service calls" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="DKD-PH-rCQ">
+                                <rect key="frame" x="16" y="435" width="96" height="21"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                <nil key="textColor"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                            <stackView opaque="NO" contentMode="scaleToFill" distribution="fillEqually" spacing="5" translatesAutoresizingMaskIntoConstraints="NO" id="uRA-zX-xSG" userLabel="Services Stack View">
+                                <rect key="frame" x="16" y="464" width="343" height="32"/>
+                                <subviews>
+                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="0EJ-EI-JjF">
+                                        <rect key="frame" x="0.0" y="0.0" width="111" height="32"/>
+                                        <color key="backgroundColor" red="0.0" green="0.47843137250000001" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                        <state key="normal" title="Reset">
+                                            <color key="titleColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                        </state>
+                                        <connections>
+                                            <action selector="onResetButton" destination="vXZ-lx-hvc" eventType="touchUpInside" id="1H2-4w-GeZ"/>
+                                        </connections>
+                                    </button>
+                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="PIw-CS-67W">
+                                        <rect key="frame" x="116" y="0.0" width="111" height="32"/>
+                                        <color key="backgroundColor" red="0.0" green="0.47843137250000001" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                        <state key="normal" title="Background">
+                                            <color key="titleColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                        </state>
+                                        <connections>
+                                            <action selector="onBackgroundButton" destination="vXZ-lx-hvc" eventType="touchUpInside" id="SB7-lz-E4O"/>
+                                        </connections>
+                                    </button>
+                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="bxo-rU-rCC">
+                                        <rect key="frame" x="232" y="0.0" width="111" height="32"/>
+                                        <color key="backgroundColor" red="0.0" green="0.47843137250000001" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                        <state key="normal" title="Teleport">
+                                            <color key="titleColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                        </state>
+                                        <connections>
+                                            <action selector="onTeleportButton" destination="vXZ-lx-hvc" eventType="touchUpInside" id="taE-c9-yoj"/>
+                                        </connections>
+                                    </button>
+                                </subviews>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="32" id="yCv-wh-bs8"/>
+                                </constraints>
+                            </stackView>
                         </subviews>
                         <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                         <constraints>
                             <constraint firstItem="2fi-mo-0CV" firstAttribute="top" secondItem="IWl-vD-0X0" secondAttribute="bottom" id="0fr-be-6Bv"/>
                             <constraint firstItem="IWl-vD-0X0" firstAttribute="top" secondItem="CxH-v8-6jW" secondAttribute="bottom" constant="30" id="3gw-8o-r7f"/>
                             <constraint firstAttribute="trailing" secondItem="zBX-0b-xbx" secondAttribute="trailing" id="4Oy-PO-hA4"/>
+                            <constraint firstAttribute="trailingMargin" secondItem="uRA-zX-xSG" secondAttribute="trailing" id="Jcz-C3-fpy"/>
                             <constraint firstItem="qzh-FK-ylm" firstAttribute="centerX" secondItem="kh9-bI-dsS" secondAttribute="centerX" id="R62-p0-GgB"/>
                             <constraint firstItem="zBX-0b-xbx" firstAttribute="top" secondItem="jyV-Pf-zRb" secondAttribute="bottom" id="Xoh-fb-UKW"/>
+                            <constraint firstItem="CxH-v8-6jW" firstAttribute="top" secondItem="uRA-zX-xSG" secondAttribute="bottom" constant="51" id="aLw-ki-gsA"/>
                             <constraint firstItem="zBX-0b-xbx" firstAttribute="leading" secondItem="kh9-bI-dsS" secondAttribute="leading" id="gTw-Hy-lFT"/>
                             <constraint firstAttribute="trailingMargin" secondItem="vWX-OQ-Z2f" secondAttribute="trailing" constant="100" id="h1I-Mr-cMQ"/>
                             <constraint firstAttribute="trailing" secondItem="CxH-v8-6jW" secondAttribute="trailing" id="hQw-uC-KUw"/>
@@ -167,14 +218,18 @@
                             <constraint firstItem="CxH-v8-6jW" firstAttribute="leading" secondItem="kh9-bI-dsS" secondAttribute="leading" id="tjk-Tb-DA1"/>
                             <constraint firstItem="IWl-vD-0X0" firstAttribute="leading" secondItem="kh9-bI-dsS" secondAttribute="leading" id="uoQ-O5-rGl"/>
                             <constraint firstAttribute="trailing" secondItem="IWl-vD-0X0" secondAttribute="trailing" id="uxZ-rP-XPD"/>
+                            <constraint firstItem="uRA-zX-xSG" firstAttribute="leading" secondItem="kh9-bI-dsS" secondAttribute="leadingMargin" id="vJo-zs-P5G"/>
                         </constraints>
                     </view>
                     <extendedEdge key="edgesForExtendedLayout"/>
                     <connections>
+                        <outlet property="backgroundButton" destination="PIw-CS-67W" id="CSd-Wd-Q10"/>
                         <outlet property="connectButton" destination="IWl-vD-0X0" id="aBH-AO-hJv"/>
                         <outlet property="downButton" destination="RVb-AP-Oaf" id="J5h-yH-T3P"/>
                         <outlet property="leftButton" destination="fz1-gW-RId" id="5eT-Td-VVg"/>
+                        <outlet property="resetButton" destination="0EJ-EI-JjF" id="Ld3-jh-egE"/>
                         <outlet property="rightButton" destination="ap5-MZ-nbu" id="RQy-ca-iTC"/>
+                        <outlet property="teleportButton" destination="bxo-rU-rCC" id="EzX-sM-949"/>
                         <outlet property="toolbar" destination="zBX-0b-xbx" id="JxG-iP-TaB"/>
                         <outlet property="turtleIconImage" destination="qzh-FK-ylm" id="d2b-yg-JgA"/>
                         <outlet property="turtleThetaLabel" destination="qtJ-JE-bo4" id="bpp-RV-x6l"/>

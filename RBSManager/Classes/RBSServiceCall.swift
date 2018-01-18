@@ -39,7 +39,8 @@ public class RBSServiceCall: NSObject {
         if let argumentOption = dataArgument {
             data["args"] = argumentOption
         } else if let argumentOption = messageArgument {
-            data["args"] = argumentOption
+            let jsonObject = argumentOption.toJSON()
+            data["args"] = jsonObject
         } else if let argumentOption = arrayArgument {
             data["args"] = argumentOption
         }

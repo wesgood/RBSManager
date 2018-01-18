@@ -17,8 +17,10 @@ class ViewController: UIViewController, RBSManagerDelegate {
     @IBOutlet var upButton: UIButton!
     @IBOutlet var rightButton: UIButton!
     @IBOutlet var downButton: UIButton!
+    @IBOutlet var resetButton: UIButton!
+    @IBOutlet var backgroundButton: UIButton!
+    @IBOutlet var teleportButton: UIButton!
     var hostButton: UIBarButtonItem?
-    var resetButton: UIBarButtonItem?
     var flexibleToolbarSpace: UIBarButtonItem?
     
     // turtle outputs
@@ -31,10 +33,17 @@ class ViewController: UIViewController, RBSManagerDelegate {
     var turtleManager: RBSManager?
     var turtlePublisher: RBSPublisher?
     var turtleSubscriber: RBSSubscriber?
+    var lastPoseMessage: PoseMessage!
     
     // data handling
     let linearSpeed: Float64 = 1.25
     let angularSpeed: Float64 = Float64.pi/4
+
+    // handle the states of the direction buttons for mixing directions
+    var leftButtonActive = false
+    var rightButtonActive = false
+    var upButtonActive = false
+    var downButtonActive = false
     
     // user settings
     var socketHost: String?
@@ -50,7 +59,6 @@ class ViewController: UIViewController, RBSManagerDelegate {
         loadSettings()
         
         // add toolbar buttons
-        resetButton = UIBarButtonItem(title: "Reset", style: .plain, target: self, action: #selector(onResetButton))
         hostButton = UIBarButtonItem(title: "Host", style: .plain, target: self, action: #selector(onHostButton))
         flexibleToolbarSpace = UIBarButtonItem(barButtonSystemItem: .flexibleSpace, target: nil, action: nil)
         updateToolbarItems()
@@ -59,8 +67,11 @@ class ViewController: UIViewController, RBSManagerDelegate {
         // create the publisher and subscriber
         turtlePublisher = turtleManager?.addPublisher(topic: "/turtle1/cmd_vel", messageType: "geometry_msgs/Twist", messageClass: TwistMessage.self)
         turtleSubscriber = turtleManager?.addSubscriber(topic: "/turtle1/pose", messageClass: PoseMessage.self, response: { (message) -> (Void) in
+            // store the message for other operations
+            self.lastPoseMessage = message as! PoseMessage
+            
             // update the view with message data
-            self.updateWithMessage(message as! PoseMessage)
+            self.updateWithMessage(self.lastPoseMessage)
         })
         turtleSubscriber?.messageType = "turtlesim/Pose"
     }
@@ -78,12 +89,6 @@ class ViewController: UIViewController, RBSManagerDelegate {
     func saveSettings() {
         let defaults = UserDefaults.standard
         defaults.set(socketHost, forKey: "socket_host")
-    }
-    
-    @objc func onResetButton() {
-        // reset the turtle sim with a service call
-        let serviceCall = turtleManager?.makeServiceCall(service: "/reset")
-        serviceCall?.send(nil)
     }
     
     @objc func onHostButton() {
@@ -124,7 +129,7 @@ class ViewController: UIViewController, RBSManagerDelegate {
         print(error?.localizedDescription ?? "connection did disconnect")
     }
     
-    @IBAction func onDirectionButton(_ button: UIButton) {
+    @IBAction func onDirectionButtonUp(_ button: UIButton) {
         // build the message based on the button tapped
         let message = TwistMessage()
         if button == upButton || button == downButton {
@@ -144,6 +149,10 @@ class ViewController: UIViewController, RBSManagerDelegate {
         // send the message with the publisher
         turtlePublisher?.publish(message)        
     }
+    
+    @IBAction func onDirectionButtonDown(_ button: UIButton) {
+        
+    }
 
     @IBAction func onConnectButton() {
         if turtleManager?.connected == true {
@@ -159,12 +168,86 @@ class ViewController: UIViewController, RBSManagerDelegate {
         }
     }
     
+    @IBAction func onResetButton() {
+        // reset the turtle sim with a service call
+        let serviceCall = turtleManager?.makeServiceCall(service: "/reset")
+        serviceCall?.send(nil)
+    }
+    
+    @IBAction func onTeleportButton() {
+        // send a service call to move the turtle to some point
+        let numberFormatter = NumberFormatter()
+        numberFormatter.maximumFractionDigits = 2
+        
+        let alertController = UIAlertController(title: "Teleport", message: "Select the X and Y coordinates to teleport the turtle", preferredStyle: .alert)
+        alertController.addTextField(configurationHandler: {(_ textField: UITextField) -> Void in
+            textField.placeholder = "X"
+            if let x = self.lastPoseMessage.x {
+                textField.text = numberFormatter.string(for: x)
+            }
+            textField.keyboardType = .numbersAndPunctuation
+        })
+        alertController.addTextField(configurationHandler: {(_ textField: UITextField) -> Void in
+            textField.placeholder = "Y"
+            if let y = self.lastPoseMessage.y {
+                textField.text = numberFormatter.string(for: y)
+            }
+            textField.keyboardType = .numbersAndPunctuation
+        })
+        alertController.addTextField(configurationHandler: {(_ textField: UITextField) -> Void in
+            textField.placeholder = "Theta"
+            if let theta = self.lastPoseMessage.theta {
+                textField.text = numberFormatter.string(for: theta)
+            }
+            textField.keyboardType = .numbersAndPunctuation
+        })
+        let confirmAction = UIAlertAction(title: "Send", style: .default, handler: {(_ action: UIAlertAction) -> Void in
+            // build the number value
+            let x = Float64(alertController.textFields![0].text!)
+            let y = Float64(alertController.textFields![1].text!)
+            let theta = Float64(alertController.textFields![2].text!)
+            
+            // send the service call
+            self.teleportTurtle(x!, y: y!, theta: theta!)
+        })
+        alertController.addAction(confirmAction)
+        let cancelAction = UIAlertAction(title: "Cancel", style: .cancel, handler: {(_ action: UIAlertAction) -> Void in
+        })
+        alertController.addAction(cancelAction)
+        present(alertController, animated: true, completion: nil)
+    }
+    
+    @IBAction func onBackgroundButton() {
+        // reset the background colour
+    }
+    
+    // send the teleport operation
+    func teleportTurtle(_ x: Float64, y: Float64, theta: Float64) {
+        // create the message object
+        let message = TeleportAbsoluteMessage()
+        message.x = x
+        message.y = y
+        message.theta = theta
+        
+        // build the service call
+        let serviceCall = turtleManager?.makeServiceCall(service: "/turtle1/teleport_absolute")
+        
+        // assign the message object to the service call
+        serviceCall?.messageArgument = message
+        
+        // send the call without accepting the response (because there is none)
+        serviceCall?.send(nil)
+    }
+    
     // update interface for the different connection statuses
     func updateButtonStates(_ connected: Bool) {
         leftButton.isEnabled = connected
         rightButton.isEnabled = connected
         downButton.isEnabled = connected
         upButton.isEnabled = connected
+        resetButton.isEnabled = connected
+        teleportButton.isEnabled = connected
+        backgroundButton.isEnabled = connected
         
         if connected {
             let redColor = UIColor(red: 0.729, green: 0.131, blue: 0.144, alpha: 1.0)
@@ -191,7 +274,7 @@ class ViewController: UIViewController, RBSManagerDelegate {
     
     func updateToolbarItems() {
         if turtleManager?.connected == true {
-            toolbar.setItems([resetButton!], animated: false)
+            toolbar.setItems([], animated: false)
         } else {
             toolbar.setItems([flexibleToolbarSpace!, hostButton!], animated: false)
         }
