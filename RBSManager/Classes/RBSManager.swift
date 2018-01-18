@@ -79,6 +79,7 @@ public class RBSManager: NSObject, WebSocketDelegate {
     /// create a service call to get a parameter
     public func getParam(name: String) -> RBSServiceCall {
         let serviceCall = makeServiceCall(service: "/rosapi/get_param")
+        serviceCall.arrayArgument = [name]
         return serviceCall
     }
     
@@ -218,7 +219,7 @@ public class RBSManager: NSObject, WebSocketDelegate {
         for serviceCall in serviceCalls {
             if ((serviceCall.serviceId != nil && serviceCall.serviceId == serviceId) || serviceCall.serviceId == nil) && serviceCall.service == service {
                 DispatchQueue.main.async {
-                    serviceCall.responseCallback?(data)
+                    serviceCall.responseCallback?(data["values"] as! [String : Any])
                 }
             }
         }

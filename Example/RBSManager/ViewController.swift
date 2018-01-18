@@ -38,6 +38,9 @@ class ViewController: UIViewController, RBSManagerDelegate, ColorPickerDelegate 
     // data handling
     let linearSpeed: Float64 = 1.25
     let angularSpeed: Float64 = Float64.pi/3
+    var redColour: Float64?
+    var greenColour: Float64?
+    var blueColour: Float64?
     
     // sending message timer
     var controlTimer: Timer?
@@ -59,7 +62,6 @@ class ViewController: UIViewController, RBSManagerDelegate, ColorPickerDelegate 
         hostButton = UIBarButtonItem(title: "Host", style: .plain, target: self, action: #selector(onHostButton))
         flexibleToolbarSpace = UIBarButtonItem(barButtonSystemItem: .flexibleSpace, target: nil, action: nil)
         updateToolbarItems()
-        
         
         // create the publisher and subscriber
         turtlePublisher = turtleManager?.addPublisher(topic: "/turtle1/cmd_vel", messageType: "geometry_msgs/Twist", messageClass: TwistMessage.self)
@@ -111,6 +113,9 @@ class ViewController: UIViewController, RBSManagerDelegate, ColorPickerDelegate 
     func managerDidConnect(_ manager: RBSManager) {
         updateButtonStates(true)
         updateToolbarItems()
+        
+        // retrieve the colours used by the background
+        retrieveColourParameters()
     }
     
     func manager(_ manager: RBSManager, threwError error: Error) {
@@ -124,6 +129,27 @@ class ViewController: UIViewController, RBSManagerDelegate, ColorPickerDelegate 
         updateButtonStates(false)
         updateToolbarItems()
         print(error?.localizedDescription ?? "connection did disconnect")
+    }
+    
+    func retrieveColourParameters() {
+        // request the colour parameters
+        let redServiceCall = turtleManager?.getParam(name : "background_r")
+        redServiceCall?.serviceId = "red"
+        redServiceCall?.send({ (data) -> (Void) in
+            self.redColour = Float64(data["value"] as! String)
+        })
+        
+        let greenServiceCall = turtleManager?.getParam(name : "background_g")
+        greenServiceCall?.serviceId = "green"
+        greenServiceCall?.send({ (data) -> (Void) in
+            self.greenColour = Float64(data["value"] as! String)
+        })
+        
+        let blueServiceCall = turtleManager?.getParam(name : "background_b")
+        blueServiceCall?.serviceId = "blue"
+        blueServiceCall?.send({ (data) -> (Void) in
+            self.blueColour = Float64(data["value"] as! String)
+        })
     }
     
     @IBAction func onDirectionButtonUp(_ button: UIButton) {
@@ -240,8 +266,13 @@ class ViewController: UIViewController, RBSManagerDelegate, ColorPickerDelegate 
     }
     
     @IBAction func onBackgroundButton() {
-        // reset the background colour using parameters
-        let colorView = ColorPickerView()
+        // reset the background colour using parameters, after retrieving the current colour
+        var colour = UIColor.black
+        if redColour != nil && greenColour != nil && blueColour != nil {
+            colour = UIColor(red: CGFloat(redColour!/255.0), green: CGFloat(greenColour!/255.0), blue: CGFloat(blueColour!/255.0), alpha: 1.0)
+        }
+        
+        let colorView = ColorPickerView(colour: colour)
         colorView.colourDelegate = self
         colorView.show()
     }

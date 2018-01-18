@@ -23,6 +23,11 @@ class ColorPickerView: ModalContainerView {
     // view info
     var viewHeight: CGFloat = 0
     
+    convenience init(colour c: UIColor?) {
+        self.init()
+        selectedColor = c
+    }
+    
     override func getRightButton() -> UIButton? {
         let button = createBottomButton(title: "Go", color: ModalContainerView.greenColour)
         button.addTarget(self, action: #selector(onGoButton), for: .touchUpInside)
@@ -44,7 +49,7 @@ class ColorPickerView: ModalContainerView {
         
         // build the views in order
         colourView = UIView(frame: CGRect(origin: CGPoint.zero, size: CGSize(width: viewWidth/3.0, height: viewWidth/3.0)))
-        colourView?.backgroundColor = UIColor.black
+        colourView?.backgroundColor = (selectedColor != nil) ? selectedColor : UIColor.black
         colourView?.center = CGPoint(x: viewWidth/2, y: colourView!.frame.size.height/2 + 10)
         view.addSubview(colourView!)
         viewHeight += colourView!.frame.maxY + 10
@@ -52,6 +57,15 @@ class ColorPickerView: ModalContainerView {
         redSlider = createSlider("Red", view: view)
         greenSlider = createSlider("Green", view: view)
         blueSlider = createSlider("Blue", view: view)
+        
+        if let colourObject = selectedColor {
+            let rgbColour = colourObject.cgColor
+            if let rgbColours = rgbColour.components {
+                redSlider?.value = Float(rgbColours[0])
+                greenSlider?.value = Float(rgbColours[1])
+                blueSlider?.value = Float(rgbColours[2])
+            }
+        }
         
         view.frame = CGRect(origin: CGPoint.zero, size: CGSize(width: viewWidth, height: viewHeight))
         return view
