@@ -37,13 +37,10 @@ class ViewController: UIViewController, RBSManagerDelegate, ColorPickerDelegate 
     
     // data handling
     let linearSpeed: Float64 = 1.25
-    let angularSpeed: Float64 = Float64.pi/4
-
-    // handle the states of the direction buttons for mixing directions
-    var leftButtonActive = false
-    var rightButtonActive = false
-    var upButtonActive = false
-    var downButtonActive = false
+    let angularSpeed: Float64 = Float64.pi/3
+    
+    // sending message timer
+    var controlTimer: Timer?
     
     // user settings
     var socketHost: String?
@@ -131,19 +128,25 @@ class ViewController: UIViewController, RBSManagerDelegate, ColorPickerDelegate 
     
     @IBAction func onDirectionButtonUp(_ button: UIButton) {
         // build the message based on the button tapped
+        if allButtonsInactive() {
+            controlTimer?.invalidate()
+            controlTimer = nil
+        }
+        sendTwistMessage()
+    }
+    
+    @objc func sendTwistMessage() {
         let message = TwistMessage()
-        if button == upButton || button == downButton {
-            if button == upButton {
-                message.linear?.x = linearSpeed
-            } else {
-                message.linear?.x = -linearSpeed
-            }
-        } else {
-            if button == leftButton {
-                message.angular?.z = angularSpeed
-            } else {
-                message.angular?.z = -angularSpeed
-            }
+        if upButton.isHighlighted {
+            message.linear?.x = linearSpeed
+        } else if downButton.isHighlighted {
+            message.linear?.x = -linearSpeed
+        }
+        
+        if leftButton.isHighlighted {
+            message.angular?.z = angularSpeed
+        } else if rightButton.isHighlighted {
+            message.angular?.z = -angularSpeed
         }
         
         // send the message with the publisher
@@ -151,7 +154,26 @@ class ViewController: UIViewController, RBSManagerDelegate, ColorPickerDelegate 
     }
     
     @IBAction func onDirectionButtonDown(_ button: UIButton) {
-        
+        // trigger the timer to start sending message
+        if controlTimer == nil {
+            controlTimer = Timer.scheduledTimer(timeInterval: 0.25, target: self, selector: #selector(sendTwistMessage), userInfo: nil, repeats: true)
+        }
+        sendTwistMessage()
+    }
+    
+    
+    func directionButtonIsActive() -> Bool {
+        if leftButton.isHighlighted || rightButton.isHighlighted || upButton.isHighlighted || downButton.isHighlighted {
+            return true
+        }
+        return false
+    }
+    
+    func allButtonsInactive() -> Bool {
+        if leftButton.isHighlighted || rightButton.isHighlighted || upButton.isHighlighted || downButton.isHighlighted {
+            return false
+        }
+        return true
     }
 
     @IBAction func onConnectButton() {
