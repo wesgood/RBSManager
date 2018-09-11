@@ -8,7 +8,7 @@
 import UIKit
 import ObjectMapper
 
-class HeaderMessage: RBSMessage {
+public class HeaderMessage: RBSMessage {
     public var seq: UInt32 = 0
     public var stamp: TimeMessage?
     public var frameId: String?
@@ -22,7 +22,7 @@ class HeaderMessage: RBSMessage {
         super.init(map: map)
     }
     
-    override func mapping(map: Map) {
+    override public func mapping(map: Map) {
         seq <- map["seq"]
         stamp <- map["stamp"]
         frameId <- map["frame_id"]
