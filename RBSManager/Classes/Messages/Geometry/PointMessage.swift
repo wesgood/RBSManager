@@ -8,12 +8,12 @@
 import UIKit
 import ObjectMapper
 
-class PointMessage: RBSMessage {
+public class PointMessage: RBSMessage {
     public var x: Float64 = 0
     public var y: Float64 = 0
     public var z: Float64 = 0
     
-    override func mapping(map: Map) {
+    public override func mapping(map: Map) {
         x <- map["x"]
         y <- map["y"]
         z <- map["z"]

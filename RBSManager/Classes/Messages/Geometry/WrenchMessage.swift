@@ -8,7 +8,7 @@
 import UIKit
 import ObjectMapper
 
-class WrenchMessage: RBSMessage {
+public class WrenchMessage: RBSMessage {
     public var force: Vector3Message?
     public var torque: Vector3Message?
     

@@ -132,6 +132,25 @@ func setParam(name: String, value: Any) -> RBSServiceCall
 ```
 Use the regular send callback to receive data.
 
+## Tools
+### Custom message generator
+As a convenience, I've included a Python script to generate Swift message files. It isn't perfect, but will do most of the work necessary for the messages to compile. It is located in the Tools folder.
+
+```
+python ./custom_messages.py [class name] [variables...n]
+```
+
+where
+
+* [class name] = the name of the file/class (should include Message for consistency)
+* [variables...n] = variable name and Swift type, separated by colon
+
+Example:
+```
+python ./custom_messages.py ExampleMessage stringData:String floatData:Float intData:Int
+```
+
+
 ## Roadmap
 This library changes a lot of things from my previous work and will definitely be in progress for some time. Please take that caveat into account when building a project and reach out to me if there is a feature you think the library is missing.
 
