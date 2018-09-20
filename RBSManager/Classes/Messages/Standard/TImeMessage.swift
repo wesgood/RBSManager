@@ -8,11 +8,11 @@
 import UIKit
 import ObjectMapper
 
-class TimeMessage: RBSMessage {
+public class TimeMessage: RBSMessage {
     public var sec: Float64 = 0
     public var nsec: Float64 = 0
     
-    override func mapping(map: Map) {
+    override public func mapping(map: Map) {
         sec <- map["sec"]
         nsec <- map["nsec"]
     }
