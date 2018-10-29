@@ -8,7 +8,7 @@
 
 Pod::Spec.new do |s|
   s.name             = 'RBSManager'
-  s.version          = '0.3.0'
+  s.version          = '0.3.1'
   s.summary          = 'RBSManager is a Swift native tool to connect to ROSBridge servers using Websockets.'
 
 # This description is used to generate tags and improve search results.
