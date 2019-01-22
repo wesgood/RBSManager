@@ -92,14 +92,14 @@ class ViewController: UIViewController, RBSManagerDelegate, ColorPickerDelegate 
     
     @objc func onHostButton() {
         // change the host used by the websocket
-        let alertController = UIAlertController(title: "Enter socket host", message: "IP or name of ROS master", preferredStyle: UIAlertControllerStyle.alert)
+        let alertController = UIAlertController(title: "Enter socket host", message: "IP or name of ROS master", preferredStyle: UIAlertController.Style.alert)
         alertController.addTextField { (textField : UITextField) -> Void in
             textField.placeholder = "Host"
             textField.text = self.socketHost
         }
-        let cancelAction = UIAlertAction(title: "Cancel", style: UIAlertActionStyle.cancel) { (result : UIAlertAction) -> Void in
+        let cancelAction = UIAlertAction(title: "Cancel", style: UIAlertAction.Style.cancel) { (result : UIAlertAction) -> Void in
         }
-        let okAction = UIAlertAction(title: "OK", style: UIAlertActionStyle.default) { (result : UIAlertAction) -> Void in
+        let okAction = UIAlertAction(title: "OK", style: UIAlertAction.Style.default) { (result : UIAlertAction) -> Void in
             if let textField = alertController.textFields?.first {
                 self.socketHost = textField.text
                 self.saveSettings()
