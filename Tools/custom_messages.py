@@ -13,25 +13,14 @@ import argparse
 import datetime
 import getpass
 
-
-if __name__ == '__main__':
-	# process parameters
-	parser = argparse.ArgumentParser(description='Generate custom ROS messages.')
-	parser.add_argument("class_name")
-	parser.add_argument("variables", nargs='+')
-	args = parser.parse_args()
-
-	# process the variables
-	variables = []
-	for entry in args.variables:
-		variables.append(entry.split(':'))
-
+def createMessageFile(path, className, variables):
+	# create the actual file
 	now = datetime.datetime.now()
 
 	# generate the Swift placeholders
 
 	placeholders = {
-		'class_name' : args.class_name,
+		'class_name' : className,
 		'author' : getpass.getuser(),
 		'date' : "%02d-%02d-%d" % (now.year, now.month, now.day),
 		'init' : ''
@@ -63,13 +52,17 @@ if __name__ == '__main__':
 
 	if len(instanceVariables) > 1:
 		placeholders['variables'] = "\n\t".join(instanceVariables)
-	else:
+	elif len(instanceVariables) > 0:
 		placeholders['variables'] = instanceVariables[0]
+	else:
+		placeholders['variables'] = ""
 
 	if len(instanceVariables) > 1:
 		placeholders['mapping'] = "\n\t\t".join(mappingVariables)
-	else:
+	elif len(mappingVariables) > 0:
 		placeholders['mapping'] = mappingVariables[0]
+	else:
+		placeholders['mapping'] = ""
 
 	if len(initVariables) > 0:
 		initMethod = "\n\tpublic override init() {\n\t\tsuper.init()\n\t\t"
@@ -81,14 +74,32 @@ if __name__ == '__main__':
 
 	# load the blank message
 	with open('BlankMessage.swift', 'r') as myfile:
-	  messageContent = myfile.read()
+	  	messageContent = myfile.read()
 
 	# replace the placeholders
 	if messageContent is not None:
 		for key,value in placeholders.items():
+			# print "%s -> %s" % (key, value)
 			messageContent = messageContent.replace('['+key+']', value)
 
 	# save the file
-	text_file = open(args.class_name+".swift", "w")
+	text_file = open(path, "w")
 	text_file.write(messageContent)
 	text_file.close()
+
+if __name__ == '__main__':
+	# process parameters
+	parser = argparse.ArgumentParser(description='Generate custom ROS messages.')
+	parser.add_argument("class_name")
+	parser.add_argument("variables", nargs='+')
+	args = parser.parse_args()
+
+	# process the variables
+	variables = []
+	for entry in args.variables:
+		variables.append(entry.split(':'))
+
+	# folder
+	filepath = os.path.realpath("%s.swift" % args.class_name)
+
+	createMessageFile(filepath, args.class_name, variables)
