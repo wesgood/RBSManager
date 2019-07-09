@@ -49,9 +49,11 @@ public class RBSPublisher: NSObject {
             "type" : self.messageType,
         ]
         
-        if let publisherIdOption = publisherId {
-            data["id"] = publisherIdOption
+        // force publisher ID assignment - this allows multiple publishers
+        if publisherId == nil {
+            publisherId = manager.randomString(length: 8)
         }
+        data["id"] = publisherId!
         
         self.manager.sendData(dictionary: data)
     }

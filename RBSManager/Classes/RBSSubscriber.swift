@@ -47,9 +47,11 @@ public class RBSSubscriber: NSObject {
             data["type"] = messageTypeOption
         }
         
-        if let subscriberIdOption = subscriberId {
-            data["id"] = subscriberIdOption
+        // force subscriber ID assignment - this allows multiple subscribers
+        if subscriberId == nil {
+            subscriberId = manager.randomString(length: 8)
         }
+        data["id"] = subscriberId!
         
         if let throttleRateOption = throttleRate {
             data["throttle_rate"] = String(describing: throttleRateOption)

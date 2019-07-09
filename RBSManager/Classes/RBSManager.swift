@@ -270,4 +270,45 @@ public class RBSManager: NSObject, WebSocketDelegate {
     public func websocketDidReceiveData(socket: WebSocketClient, data: Data) {
         
     }
+    
+    // MARK: - Accessors
+    
+    /// Retrieve a single subscriber matching the topic and unique ID
+    ///
+    /// - Parameters:
+    ///   - topic: the topic string
+    ///   - id: the optional subscriber ID
+    /// - Returns: nil or matching subscriber object
+    public func getSubscriber(topic: String, id: String? = nil) -> RBSSubscriber? {
+        let filtered = subscribers.filter({ return topic == $0.topic && $0.subscriberId == id })
+        return filtered.first
+    }
+    
+    /// Retrieve a single publisher matching the topic and unique ID
+    ///
+    /// - Parameters:
+    ///   - topic: the topic string
+    ///   - id: the optional publisher ID
+    /// - Returns: nil or matching publisher object
+    public func getPublisher(topic: String, id: String? = nil) -> RBSPublisher? {
+        let filtered = publishers.filter({ return topic == $0.topic && $0.publisherId == id })
+        return filtered.first
+    }
+    
+    /// Retrieve a single service call matching the service and unique ID
+    ///
+    /// - Parameters:
+    ///   - service: the topic string
+    ///   - id: the optional publisher ID
+    /// - Returns: nil or matching service call
+    public func getServiceCall(service: String, id: String? = nil) -> RBSServiceCall? {
+        let filtered = serviceCalls.filter({ return service == $0.service && $0.serviceId == id })
+        return filtered.first
+    }
+    
+    // MARK: - Utility methods
+    func randomString(length: Int) -> String {
+        let letters = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789"
+        return String((0..<length).map{ _ in letters.randomElement()! })
+    }
 }
