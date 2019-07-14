@@ -50,10 +50,10 @@ public class RBSPublisher: NSObject {
         ]
         
         // force publisher ID assignment - this allows multiple publishers
-        if publisherId == nil {
-            publisherId = manager.randomString(length: 8)
-        }
-        data["id"] = publisherId!
+//        if publisherId == nil {
+//            publisherId = manager.randomString(length: 8)
+//        }
+        data["id"] = publisherId
         
         self.manager.sendData(dictionary: data)
     }

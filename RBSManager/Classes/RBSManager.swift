@@ -191,7 +191,7 @@ public class RBSManager: NSObject, WebSocketDelegate {
         let topic = data["topic"] as? String
         
         for subscriber in subscribers {
-            if ((subscriber.subscriberId != nil && subscriber.subscriberId == subscriberId) || subscriber.subscriberId == nil) && subscriber.topic == topic {
+            if subscriber.topic == topic && subscriber.subscriberId == subscriberId  {
                 // use the provided message type to generate a new instance
                 let messageType = subscriber.messageClass
                 if let messageData = data["msg"] as? [String : Any] {

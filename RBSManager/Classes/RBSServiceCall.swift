@@ -46,9 +46,9 @@ public class RBSServiceCall: NSObject {
         }
         
         // force service call ID assignment - this allows multiple service calls
-        if serviceId == nil {
-            serviceId = manager.randomString(length: 8)
-        }
+//        if serviceId == nil {
+//            serviceId = manager.randomString(length: 8)
+//        }
         data["id"] = serviceId
         
         if let fragmentSizeOption = fragmentSize {

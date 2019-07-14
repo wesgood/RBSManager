@@ -38,7 +38,7 @@ public class RBSSubscriber: NSObject {
         self.active = true
         
         // build the dictionary to send to ROS
-        var data = [String : String]()
+        var data = [String : Any]()
         data["op"] = "subscribe"
         data["topic"] = self.topic
         
@@ -48,13 +48,13 @@ public class RBSSubscriber: NSObject {
         }
         
         // force subscriber ID assignment - this allows multiple subscribers
-        if subscriberId == nil {
-            subscriberId = manager.randomString(length: 8)
-        }
-        data["id"] = subscriberId!
+//        if subscriberId == nil {
+//            subscriberId = manager.randomString(length: 8)
+//        }
+        data["id"] = subscriberId
         
         if let throttleRateOption = throttleRate {
-            data["throttle_rate"] = String(describing: throttleRateOption)
+            data["throttle_rate"] = throttleRateOption
         }
         
         if let queueLengthOption = queueLength {
