@@ -11,10 +11,10 @@ import ObjectMapper
 public class RBSServiceCall: NSObject {
     var manager: RBSManager
     public var service: String
-    public var dataArgument: [String : String]?
+    public var dataArgument: [String : Any]?
     public var messageArgument: Mappable?
     public var arrayArgument: [Any]?
-    var responseCallback: ((_ data: [String : Any]) -> (Void))?
+    var responseCallback: ((_ data: RBSResponse) -> (Void))?
     
     // ROS specific options
     public var fragmentSize: Int?
@@ -27,7 +27,7 @@ public class RBSServiceCall: NSObject {
     }
     
     /// send a service call and optionally handle the response
-    public func send(_ response: ((_ data: [String : Any]) -> (Void))?) {
+    public func send(_ response: ((_ data: RBSResponse) -> (Void))?) {
         self.responseCallback = response
         
         // build the dictionary to send to ROS

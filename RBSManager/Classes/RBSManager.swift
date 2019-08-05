@@ -185,23 +185,20 @@ public class RBSManager: NSObject, WebSocketDelegate {
         socket?.write(string: JSON)
     }
     
-    func postSubscriberData(_ data: [String : Any]) {
+    func postSubscriberData(_ response: RBSResponse) {
         // map the provided dictionary into the correct models
-        let subscriberId = data["id"] as? String
-        let topic = data["topic"] as? String
-        
         for subscriber in subscribers {
-            if subscriber.topic == topic && subscriber.subscriberId == subscriberId  {
+            if subscriber.topic == response.topic {
                 // use the provided message type to generate a new instance
                 let messageType = subscriber.messageClass
-                if let messageData = data["msg"] as? [String : Any] {
+                if let messageData = response.values as? [String : Any] {
                     let map = Map.init(mappingType: .fromJSON, JSON: messageData)
                     if let message = messageType.init(map: map) {
                         DispatchQueue.main.async {
                             subscriber.callback(message)
                         }
                     } else {
-                        let error = createError("unable to generate object of type \(messageType.description)", code: RBSManagerError.JSONDeserializerError.rawValue)
+                        let error = createError("unable to generate object of type \(String(describing: messageType.description))", code: RBSManagerError.JSONDeserializerError.rawValue)
                         DispatchQueue.main.async {
                             self.delegate?.manager(self, threwError: error)
                         }
@@ -211,15 +208,12 @@ public class RBSManager: NSObject, WebSocketDelegate {
         }
     }
     
-    func postServiceCallData(_ data: [String : Any]) {
+    func postServiceCallData(_ response: RBSResponse) {
         // map the provided dictionary into the correct models
-        let serviceId = data["id"] as? String
-        let service = data["service"] as? String
-        
         for serviceCall in serviceCalls {
-            if ((serviceCall.serviceId != nil && serviceCall.serviceId == serviceId) || serviceCall.serviceId == nil) && serviceCall.service == service {
+            if ((serviceCall.serviceId != nil && serviceCall.serviceId == response.id) || serviceCall.serviceId == nil) && serviceCall.service == response.service {
                 DispatchQueue.main.async {
-                    serviceCall.responseCallback?(data["values"] as! [String : Any])
+                    serviceCall.responseCallback?(response)
                 }
             }
         }
@@ -245,25 +239,18 @@ public class RBSManager: NSObject, WebSocketDelegate {
     }
     
     public func websocketDidReceiveMessage(socket: WebSocketClient, text: String) {
-        // deserialize first to know what to do
-        var dictionary: [String : Any]?
-        if let data = text.data(using: .utf8) {
-            do {
-                dictionary = try JSONSerialization.jsonObject(with: data, options: []) as? [String: Any]
-            } catch {
-                print(error.localizedDescription)
+        // map to the response object
+        if let response = Mapper<RBSResponse>().map(JSONString: text) {
+            if let operation = response.operation {
+                switch operation {
+                case .publish:
+                    postSubscriberData(response)
+                case .serviceResponse:
+                    postServiceCallData(response)
+                }
             }
-        }
-        
-        // process the dictionary
-        if let op = dictionary?["op"] as? String {
-            if op == "publish" {
-                // handle the subscription response
-                postSubscriberData(dictionary!)
-            } else if op == "service_response" {
-                // handle the service response
-                postServiceCallData(dictionary!)
-            }
+        } else {
+            print("socket error: \(text)")
         }
     }
     

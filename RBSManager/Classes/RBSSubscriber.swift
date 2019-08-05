@@ -58,11 +58,11 @@ public class RBSSubscriber: NSObject {
         }
         
         if let queueLengthOption = queueLength {
-            data["queue_length"] = String(describing: queueLengthOption)
+            data["queue_length"] = queueLengthOption
         }
         
         if let fragmentSizeOption = fragmentSize {
-            data["fragment_size"] = String(describing: fragmentSizeOption)
+            data["fragment_size"] = fragmentSizeOption
         }
         
         if let compressionOption = compression {

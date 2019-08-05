@@ -13,8 +13,8 @@ public class TimeMessage: RBSMessage {
     public var nsec: Float64 = 0
     
     override public func mapping(map: Map) {
-        sec <- map["sec"]
-        nsec <- map["nsec"]
+        sec <- map["secs"]
+        nsec <- map["nsecs"]
     }
     
     public func date() -> Date {

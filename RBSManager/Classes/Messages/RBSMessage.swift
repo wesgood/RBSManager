@@ -22,4 +22,24 @@ open class RBSMessage: NSObject, Mappable {
     open func mapping(map: Map) {
         // overridden
     }
+    
+    let base64Transform = TransformOf<[UInt8], String>(fromJSON: { (value: String?) -> [UInt8]? in
+        // string -> array
+        if value == nil {
+            return nil
+        }
+        
+        if let data = Data(base64Encoded: value!) {
+            let array = [UInt8](data)
+            return array
+        } else {
+            return nil
+        }
+    }, toJSON: { (value: [UInt8]?) -> String? in
+        // base 64 to String
+        if value == nil {
+            return nil
+        }
+        return nil // unnecessary now
+    })
 }
