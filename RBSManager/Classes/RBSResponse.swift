@@ -19,6 +19,7 @@ public class RBSResponse: NSObject, Mappable {
     public var operation: ROSBridgeOperation?
     public var result: Int?
     public var values: Any?
+    public var message: [String : Any]?
     
     required public init?(map: Map) {
     }
@@ -30,11 +31,24 @@ public class RBSResponse: NSObject, Mappable {
         operation <- map["op"]
         result <- map["result"]
         values <- map["values"]
+        message <- map["msg"]
     }
     
-    public func getParameter() -> Any? {
+    public func getFloatParameter() -> Float? {
         if let valuesObject = values as? [String : Any] {
-            if let value = valuesObject["value"] {
+            if let value = valuesObject["value"] as? NSString {
+                return value.floatValue
+            } else {
+                return nil
+            }
+        } else {
+            return nil
+        }
+    }
+    
+    public func getStringParameter() -> String? {
+        if let valuesObject = values as? [String : Any] {
+            if let value = valuesObject["value"] as? String {
                 return value
             } else {
                 return nil

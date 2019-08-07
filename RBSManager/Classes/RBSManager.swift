@@ -191,7 +191,7 @@ public class RBSManager: NSObject, WebSocketDelegate {
             if subscriber.topic == response.topic {
                 // use the provided message type to generate a new instance
                 let messageType = subscriber.messageClass
-                if let messageData = response.values as? [String : Any] {
+                if let messageData = response.message {
                     let map = Map.init(mappingType: .fromJSON, JSON: messageData)
                     if let message = messageType.init(map: map) {
                         DispatchQueue.main.async {
