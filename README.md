@@ -16,10 +16,16 @@ RBSManager provides a wrapper for the different ROS functionality calls:
 
 ## Dependencies
 RBSManager uses the following Github components, installed with the CocoaPod:
+
 * [Starscream](https://github.com/daltoniam/starscream) -- a Swift native Websocket library
 * [ObjectMapper](https://github.com/Hearst-DD/ObjectMapper) -- a tool to translate JSON data into Swift objects (used by the ROS message system)
 
 Thank you to their developers!
+
+### Acknowledgements ###
+Additionally here are some of the users that have contributed code or message definitions. Thank you to them too!
+
+* [Brandon M](https://github.com/BrandonMan123/MRG-Racecar-App)
 
 ## Example
 
@@ -155,7 +161,9 @@ python ./custom_messages.py ExampleMessage stringData:String floatData:Float int
 This library changes a lot of things from my previous work and will definitely be in progress for some time. Please take that caveat into account when building a project and reach out to me if there is a feature you think the library is missing.
 
 * populate all standard ROS message types
-* improve the handling of multiple subscribers/publishers by generating random IDs if not provided
+
+### Actionlib ###
+The rosbridge project does not mention any support for the actionlib components. The protocol is listed  [here](https://github.com/RobotWebTools/rosbridge_suite/blob/groovy-devel/ROSBRIDGE_PROTOCOL.md). If this is functionality you're looking for, I suggest connecting with that team.
 
 ## Author
 
