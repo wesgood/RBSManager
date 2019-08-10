@@ -36,7 +36,7 @@ public class RBSResponse: NSObject, Mappable {
     
     public func getFloatParameter() -> Float? {
         if let valuesObject = values as? [String : Any] {
-            if let value = valuesObject["value"] as? NSString {
+            if let value = valuesObject["value"] as? NSString, value.lowercased != "null" {
                 return value.floatValue
             } else {
                 return nil

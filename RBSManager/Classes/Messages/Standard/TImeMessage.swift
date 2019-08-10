@@ -11,6 +11,14 @@ import ObjectMapper
 public class TimeMessage: RBSMessage {
     public var sec: Float64 = 0
     public var nsec: Float64 = 0
+
+    public override init() {
+        super.init()
+    }
+    
+    public required init?(map: Map) {
+        super.init(map: map)
+    }
     
     override public func mapping(map: Map) {
         sec <- map["secs"]
