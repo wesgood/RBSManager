@@ -1,6 +1,6 @@
 PODS:
   - ObjectMapper (3.4.2)
-  - RBSManager (0.3.1):
+  - RBSManager (0.3.3):
     - ObjectMapper (~> 3.4.2)
     - Starscream (~> 3.0.3)
   - Starscream (3.0.6)
@@ -9,7 +9,7 @@ DEPENDENCIES:
   - RBSManager (from `../`)
 
 SPEC REPOS:
-  https://github.com/cocoapods/specs.git:
+  trunk:
     - ObjectMapper
     - Starscream
 
@@ -19,9 +19,9 @@ EXTERNAL SOURCES:
 
 SPEC CHECKSUMS:
   ObjectMapper: 0d4402610f4e468903ae64629eec4784531e5c51
-  RBSManager: d51cdbab1ed62b674e607fc16f44c65bbb5766cc
+  RBSManager: 26f744755646e95dad59acba20c52d24cd3a8891
   Starscream: ef3ece99d765eeccb67de105bfa143f929026cf5
 
 PODFILE CHECKSUM: f846aef6eda8851afffa37dff07fc3a0c9176da6
 
-COCOAPODS: 1.5.3
+COCOAPODS: 1.8.4

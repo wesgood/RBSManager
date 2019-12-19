@@ -138,6 +138,12 @@ func setParam(name: String, value: Any) -> RBSServiceCall
 ```
 Use the regular send callback to receive data.
 
+## Design considerations
+### Multiple subscribers
+While building a custom robot controller, I investigated the best way to subscribe to the same topic multiple times. While subscribers allow IDs to be assigned, the return values do not respect these. In practice this means that if two subscribers have different refresh rates, they will both receive the message at the fastest rate specified. 
+
+To get around this it is recommended that you use the iOS notification pattern to distribute messages based on your requirements. A single DataModel type object can subscribe to each unique topic and share the messages with the individual controllers.
+
 ## Tools
 ### Custom message generator
 As a convenience, I've included a Python script to generate Swift message files. It isn't perfect, but will do most of the work necessary for the messages to compile. It is located in the Tools folder.
