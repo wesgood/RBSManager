@@ -7,6 +7,7 @@
 
 import UIKit
 import ObjectMapper
+import CoreLocation
 
 public enum PositionCovarianceType: UInt8 {
     case COVARIANCE_TYPE_UNKNOWN = 0
@@ -52,5 +53,9 @@ public class NavSatFixMessage: RBSMessage {
     public func longitudeLabel() -> String? {
         let quadrant = (longitude > 0) ? "E" : "W"
         return String(format: "%.4f %@", longitude, quadrant)
+    }
+    
+    public func coordinate() -> CLLocationCoordinate2D {
+        return CLLocationCoordinate2D(latitude: latitude, longitude: longitude)
     }
 }
