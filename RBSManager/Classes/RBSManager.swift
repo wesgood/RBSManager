@@ -210,12 +210,21 @@ public class RBSManager: NSObject, WebSocketDelegate {
     
     func postServiceCallData(_ response: RBSResponse) {
         // map the provided dictionary into the correct models
-        for serviceCall in serviceCalls {
+        var toRemove = [Int]()
+        
+        for (i,serviceCall) in serviceCalls.enumerated() {
             if ((serviceCall.serviceId != nil && serviceCall.serviceId == response.id) || serviceCall.serviceId == nil) && serviceCall.service == response.service {
                 DispatchQueue.main.async {
                     serviceCall.responseCallback?(response)
                 }
+                toRemove.append(i)
+                break
             }
+        }
+        
+        // remove calls that have completed
+        for index in toRemove {
+            self.serviceCalls.remove(at: index)
         }
     }
     
