@@ -58,4 +58,12 @@ public class NavSatFixMessage: RBSMessage {
     public func coordinate() -> CLLocationCoordinate2D {
         return CLLocationCoordinate2D(latitude: latitude, longitude: longitude)
     }
+    
+    public func hasFix() -> Bool {
+        if let fix = status?.status {
+            return fix.rawValue > NavSatStatus.STATUS_NO_FIX.rawValue
+        } else {
+            return false
+        }
+    }
 }

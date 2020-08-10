@@ -93,25 +93,33 @@ public class RBSManager: NSObject, WebSocketDelegate {
     
     func advertisePublishers() {
         for publisher in publishers {
-            publisher.advertise()
+            if publisher.active {
+                publisher.advertise()
+            }
         }
     }
     
     func attachSubscribers() {
         for subscriber in subscribers {
-            subscriber.subscribe()
+            if subscriber.active {
+                subscriber.subscribe()
+            }
         }
     }
     
     func removePublishers() {
         for publisher in publishers {
-            publisher.unadvertise()
+            if publisher.active {
+                publisher.unadvertise()
+            }
         }
     }
     
     func removeSubscribers() {
         for subscriber in subscribers {
-            subscriber.unsubscribe()
+            if subscriber.active {
+                subscriber.unsubscribe()
+            }
         }
     }
     
