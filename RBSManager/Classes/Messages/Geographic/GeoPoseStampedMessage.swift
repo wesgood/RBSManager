@@ -1,29 +1,29 @@
 //
-//  PathMessage.swift
+//  GeoPoseStampedMessage.swift
 //  RBSManager
 //
-//  Created by Wes Goodhoofd on 2019-08-07.
+//  Created by Wes Goodhoofd on 2020-08-16.
 //
 
 import UIKit
 import ObjectMapper
 
-public class PathMessage: RBSMessage {
+public class GeoPoseStampedMessage: RBSMessage {
     public var header: HeaderMessage?
-    public var poses: [GeoPoseStampedMessage]?
+    public var pose: GeoPoseMessage?
     
     public override init() {
         super.init()
         header = HeaderMessage()
-        poses = [GeoPoseStampedMessage]()
+        pose = GeoPoseMessage()
     }
     
     public required init?(map: Map) {
         super.init(map: map)
     }
     
-    override public func mapping(map: Map) {
+    public override func mapping(map: Map) {
         header <- map["header"]
-        poses <- map["poses"]
+        pose <- map["pose"]
     }
 }
