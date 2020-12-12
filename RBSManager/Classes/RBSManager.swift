@@ -29,7 +29,7 @@ public class RBSManager: NSObject, WebSocketDelegate {
     
     // socket handling
     var timeoutTimer: Timer?
-    public var timeout: Double = 0
+    public var timeout: Double = 30.0
     
     // ROS handling
     var publishers: [RBSPublisher]
@@ -124,6 +124,7 @@ public class RBSManager: NSObject, WebSocketDelegate {
     }
     
     // MARK: Socket handling
+    
     public func connect(address: String) {
         // validate the address
         var addressString = address
@@ -143,7 +144,11 @@ public class RBSManager: NSObject, WebSocketDelegate {
                     self.delegate?.manager(self, threwError: error)
                 })
             }
-            socket = WebSocket(url: url)
+            
+            var request = URLRequest(url: url)
+            request.timeoutInterval = timeout
+            
+            socket = WebSocket(request: request)
             socket.callbackQueue = DispatchQueue(label: "rbsmanager_socket")
             socket.delegate = self
             socket.connect()
@@ -237,42 +242,53 @@ public class RBSManager: NSObject, WebSocketDelegate {
     }
     
     // MARK: WebSocket delegate methods
-    public func websocketDidConnect(socket: WebSocketClient) {
-        self.connected = true
-        self.timeoutTimer?.invalidate()
-        self.advertisePublishers()
-        self.attachSubscribers()
-        DispatchQueue.main.async {
-            self.delegate?.managerDidConnect(self)
-        }
-    }
     
-    public func websocketDidDisconnect(socket: WebSocketClient, error: Error?) {
-        self.connected = false
-        DispatchQueue.main.async {
-            self.delegate?.manager(self, didDisconnect: error)
-        }
-        self.socket = nil
-    }
-    
-    public func websocketDidReceiveMessage(socket: WebSocketClient, text: String) {
-        // map to the response object
-        if let response = Mapper<RBSResponse>().map(JSONString: text) {
-            if let operation = response.operation {
-                switch operation {
-                case .publish:
-                    postSubscriberData(response)
-                case .serviceResponse:
-                    postServiceCallData(response)
-                }
+    public func didReceive(event: WebSocketEvent, client: WebSocket) {
+        switch event {
+        case .connected(_):
+            self.connected = true
+            self.timeoutTimer?.invalidate()
+            self.advertisePublishers()
+            self.attachSubscribers()
+            DispatchQueue.main.async {
+                self.delegate?.managerDidConnect(self)
             }
-        } else {
-            print("socket error: \(text)")
+        case .disconnected(let reason, let code):
+            self.connected = false
+            self.delegate?.manager(self, didDisconnect: createError(reason, code: Int(code)))
+            self.socket = nil
+        case .text(let text):
+            // map to the response object
+            if let response = Mapper<RBSResponse>().map(JSONString: text) {
+                if let operation = response.operation {
+                    switch operation {
+                    case .publish:
+                        postSubscriberData(response)
+                    case .serviceResponse:
+                        postServiceCallData(response)
+                    }
+                }
+            } else {
+                print("socket error: \(text)")
+            }
+        case .binary(let data):
+            print("Received data: \(data.count)")
+        case .ping(_):
+            break
+        case .pong(_):
+            break
+        case .viabilityChanged(_):
+            break
+        case .reconnectSuggested(_):
+            break
+        case .cancelled:
+            self.connected = false
+        case .error(let error):
+            self.connected = false
+            if error != nil {
+                self.delegate?.manager(self, threwError: error!)
+            }
         }
-    }
-    
-    public func websocketDidReceiveData(socket: WebSocketClient, data: Data) {
-        
     }
     
     // MARK: - Accessors
