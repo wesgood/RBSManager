@@ -135,20 +135,26 @@ class ViewController: UIViewController, RBSManagerDelegate, ColorPickerDelegate 
         // request the colour parameters
         let redServiceCall = turtleManager?.getParam(name : "background_r")
         redServiceCall?.serviceId = "red"
-        redServiceCall?.send({ (data) -> (Void) in
-            self.redColour = Float64(data["value"] as! String)
+        redServiceCall?.send({ (response) -> (Void) in
+            if let values = response.values as? [String:Any], let value = values["value"] as? String {
+                self.redColour = Float64(value)
+            }
         })
         
         let greenServiceCall = turtleManager?.getParam(name : "background_g")
         greenServiceCall?.serviceId = "green"
-        greenServiceCall?.send({ (data) -> (Void) in
-            self.greenColour = Float64(data["value"] as! String)
+        greenServiceCall?.send({ (response) -> (Void) in
+            if let values = response.values as? [String:Any], let value = values["value"] as? String {
+                self.greenColour = Float64(value)
+            }
         })
         
         let blueServiceCall = turtleManager?.getParam(name : "background_b")
         blueServiceCall?.serviceId = "blue"
-        blueServiceCall?.send({ (data) -> (Void) in
-            self.blueColour = Float64(data["value"] as! String)
+        blueServiceCall?.send({ (response) -> (Void) in
+            if let values = response.values as? [String:Any], let value = values["value"] as? String {
+                self.blueColour = Float64(value)
+            }
         })
     }
     
@@ -230,21 +236,21 @@ class ViewController: UIViewController, RBSManagerDelegate, ColorPickerDelegate 
         let alertController = UIAlertController(title: "Teleport", message: "Select the X and Y coordinates to teleport the turtle", preferredStyle: .alert)
         alertController.addTextField(configurationHandler: {(_ textField: UITextField) -> Void in
             textField.placeholder = "X"
-            if let x = self.lastPoseMessage.x {
+            if let x = self.lastPoseMessage?.position?.x {
                 textField.text = numberFormatter.string(for: x)
             }
             textField.keyboardType = .numbersAndPunctuation
         })
         alertController.addTextField(configurationHandler: {(_ textField: UITextField) -> Void in
             textField.placeholder = "Y"
-            if let y = self.lastPoseMessage.y {
+            if let y = self.lastPoseMessage?.position?.y {
                 textField.text = numberFormatter.string(for: y)
             }
             textField.keyboardType = .numbersAndPunctuation
         })
         alertController.addTextField(configurationHandler: {(_ textField: UITextField) -> Void in
             textField.placeholder = "Theta"
-            if let theta = self.lastPoseMessage.theta {
+            if let theta = self.lastPoseMessage?.orientation?.w {
                 textField.text = numberFormatter.string(for: theta)
             }
             textField.keyboardType = .numbersAndPunctuation
@@ -336,15 +342,16 @@ class ViewController: UIViewController, RBSManagerDelegate, ColorPickerDelegate 
     }
     
     func updateWithMessage(_ message: PoseMessage) {
-        turtleXLabel.text = String(describing: message.x ?? 0)
-        turtleYLabel.text = String(describing: message.y ?? 0)
-        turtleThetaLabel.text = String(describing: message.theta ?? 0)
+        turtleXLabel.text = String(describing: message.position?.x ?? 0)
+        turtleYLabel.text = String(describing: message.position?.y ?? 0)
+        turtleThetaLabel.text = String(describing: message.orientation?.w ?? 0)
         
         // rotate the turtle for fun
         UIView.animate(withDuration: 0.25, animations: {
             // add 90 deg due to the image orientation
-            self.turtleIconImage.transform = CGAffineTransform(rotationAngle: -CGFloat(message.theta! - (Float.pi/2)))
-        })
+            let angle = CGFloat(-1.0 * (message.orientation!.w - Double.pi/2.0))
+            self.turtleIconImage.transform = CGAffineTransform(rotationAngle: angle)
+        },  completion: nil)
     }
     
     func updateToolbarItems() {
