@@ -126,7 +126,18 @@ Example
 ```
 let serviceCall = turtleManager?.makeServiceCall(service: "/reset")
 ```
-The service call can be triggered by calling `.send(_ response: ((_ data: [String : Any]) -> (Void))?)`. That optional response callback can receive the service call response and return a dictionary of data.
+The service call can be triggered by calling `.send(_ response: ((_ response: RBSResponse) -> (Void))?)`. That optional response callback can receive the service call response and return an `RBSResponse` of data.
+
+Version 0.4 moves to the `RBSResponse` data type, which includes additional context about the request. Use `response.values` to look for the data returned by the call.
+
+Example
+```
+serviceCall?.send({ (response) -> (Void) in
+    if let values = response.values as? [String:Any], let value = values["value"] as? String {
+        self.number = Float64(value)
+    }
+})
+```
 
 To pass data to the service call itself, assign data to one of: dataArgument (dictionary), messageArgument (an RBSMessage object) or arrayArgument (array)
 
