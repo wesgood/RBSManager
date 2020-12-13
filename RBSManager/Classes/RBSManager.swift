@@ -285,6 +285,10 @@ public class RBSManager: NSObject, WebSocketDelegate {
             break
         case .cancelled:
             self.connected = false
+            DispatchQueue.main.async {
+                self.delegate?.manager(self, didDisconnect: nil)
+            }
+            self.socket = nil
         case .error(let error):
             self.connected = false
             if error != nil {
