@@ -29,7 +29,7 @@ public class RBSManager: NSObject, WebSocketDelegate {
     
     // socket handling
     var timeoutTimer: Timer?
-    public var timeout: Double = 30.0
+    public var timeout: Double = 10.0
     
     // ROS handling
     var publishers: [RBSPublisher]
@@ -146,12 +146,12 @@ public class RBSManager: NSObject, WebSocketDelegate {
             }
             
             var request = URLRequest(url: url)
-            request.timeoutInterval = timeout
+            request.timeoutInterval = TimeInterval(timeout)
             
-            socket = WebSocket(request: request)
-            socket.callbackQueue = DispatchQueue(label: "rbsmanager_socket")
-            socket.delegate = self
-            socket.connect()
+            self.socket = WebSocket(request: request)
+            self.socket.callbackQueue = DispatchQueue(label: "rbsmanager_socket")
+            self.socket.delegate = self
+            self.socket.connect()
         } else {
             let error = createError("Requested websocket URL is invalid", code: RBSManagerError.InvalidUrl.rawValue)
             self.delegate?.manager(self, threwError: error)
@@ -255,7 +255,9 @@ public class RBSManager: NSObject, WebSocketDelegate {
             }
         case .disconnected(let reason, let code):
             self.connected = false
-            self.delegate?.manager(self, didDisconnect: createError(reason, code: Int(code)))
+            DispatchQueue.main.async {
+                self.delegate?.manager(self, didDisconnect: self.createError(reason, code: Int(code)))
+            }
             self.socket = nil
         case .text(let text):
             // map to the response object
@@ -286,7 +288,9 @@ public class RBSManager: NSObject, WebSocketDelegate {
         case .error(let error):
             self.connected = false
             if error != nil {
-                self.delegate?.manager(self, threwError: error!)
+                DispatchQueue.main.async {
+                    self.delegate?.manager(self, threwError: error!)
+                }
             }
         }
     }
