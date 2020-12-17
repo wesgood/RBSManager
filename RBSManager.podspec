@@ -38,6 +38,6 @@ RBSManager is a continuation of my previous project, RBManager, to provide an iO
 
   # s.public_header_files = 'Pod/Classes/**/*.h'
   # s.frameworks = 'UIKit', 'MapKit'
-  s.dependency 'Starscream', '~> 4.0'
+  s.dependency 'Starscream', '~> 3.1.1'
   s.dependency 'ObjectMapper', '~> 4.2'
 end

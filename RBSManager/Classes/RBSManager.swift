@@ -243,6 +243,38 @@ public class RBSManager: NSObject, WebSocketDelegate {
     
     // MARK: WebSocket delegate methods
     
+    public func websocketDidConnect(socket: WebSocketClient) {
+        self.connected = true
+        self.timeoutTimer?.invalidate()
+        self.advertisePublishers()
+        self.attachSubscribers()
+        DispatchQueue.main.async {
+            self.delegate?.managerDidConnect(self)
+        }
+    }
+    
+    public func websocketDidDisconnect(socket: WebSocketClient, error: Error?) {
+        self.connected = false
+        DispatchQueue.main.async {
+            self.delegate?.manager(self, didDisconnect: error)
+        }
+        self.socket = nil
+    }
+    
+    public func websocketDidReceiveMessage(socket: WebSocketClient, text: String) {
+        // map to the response object
+        if let response = Mapper<RBSResponse>().map(JSONString: text) {
+            if let operation = response.operation {
+                switch operation {
+                case .publish:
+                    postSubscriberData(response)
+                case .serviceResponse:
+                    postServiceCallData(response)
+                }
+            }
+        }
+    }
+    
     public func didReceive(event: WebSocketEvent, client: WebSocket) {
         switch event {
         case .connected(_):
