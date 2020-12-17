@@ -1,9 +1,9 @@
 PODS:
   - ObjectMapper (4.2.0)
-  - RBSManager (0.3.3):
+  - RBSManager (0.4):
     - ObjectMapper (~> 4.2)
-    - Starscream (~> 4.0)
-  - Starscream (4.0.4)
+    - Starscream (~> 3.1.1)
+  - Starscream (3.1.1)
 
 DEPENDENCIES:
   - RBSManager (from `../`)
@@ -19,8 +19,8 @@ EXTERNAL SOURCES:
 
 SPEC CHECKSUMS:
   ObjectMapper: 1eb41f610210777375fa806bf161dc39fb832b81
-  RBSManager: 26e247e5ee2bcb360a5bf2a2ca21df4b08651765
-  Starscream: 5178aed56b316f13fa3bc55694e583d35dd414d9
+  RBSManager: 67cfce80e0103ca4073b23c73aac646158b3331b
+  Starscream: 4bb2f9942274833f7b4d296a55504dcfc7edb7b0
 
 PODFILE CHECKSUM: f846aef6eda8851afffa37dff07fc3a0c9176da6
 

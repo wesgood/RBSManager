@@ -22,6 +22,7 @@ public enum RBSManagerError: Int {
 }
 
 public class RBSManager: NSObject, WebSocketDelegate {
+    
     var socket: WebSocket!
     public var delegate: RBSManagerDelegate?
     public var host: String?
@@ -275,60 +276,8 @@ public class RBSManager: NSObject, WebSocketDelegate {
         }
     }
     
-    public func didReceive(event: WebSocketEvent, client: WebSocket) {
-        switch event {
-        case .connected(_):
-            self.connected = true
-            self.timeoutTimer?.invalidate()
-            self.advertisePublishers()
-            self.attachSubscribers()
-            DispatchQueue.main.async {
-                self.delegate?.managerDidConnect(self)
-            }
-        case .disconnected(let reason, let code):
-            self.connected = false
-            DispatchQueue.main.async {
-                self.delegate?.manager(self, didDisconnect: self.createError(reason, code: Int(code)))
-            }
-            self.socket = nil
-        case .text(let text):
-            // map to the response object
-            if let response = Mapper<RBSResponse>().map(JSONString: text) {
-                if let operation = response.operation {
-                    switch operation {
-                    case .publish:
-                        postSubscriberData(response)
-                    case .serviceResponse:
-                        postServiceCallData(response)
-                    }
-                }
-            } else {
-                print("socket error: \(text)")
-            }
-        case .binary(let data):
-            print("Received data: \(data.count)")
-        case .ping(_):
-            break
-        case .pong(_):
-            break
-        case .viabilityChanged(_):
-            break
-        case .reconnectSuggested(_):
-            break
-        case .cancelled:
-            self.connected = false
-            DispatchQueue.main.async {
-                self.delegate?.manager(self, didDisconnect: nil)
-            }
-            self.socket = nil
-        case .error(let error):
-            self.connected = false
-            if error != nil {
-                DispatchQueue.main.async {
-                    self.delegate?.manager(self, threwError: error!)
-                }
-            }
-        }
+    public func websocketDidReceiveData(socket: WebSocketClient, data: Data) {
+        
     }
     
     // MARK: - Accessors
