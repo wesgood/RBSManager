@@ -178,6 +178,7 @@ python ./custom_messages.py ExampleMessage stringData:String floatData:Float int
 This library changes a lot of things from my previous work and will definitely be in progress for some time. Please take that caveat into account when building a project and reach out to me if there is a feature you think the library is missing.
 
 * populate all standard ROS message types
+* convert all Dictionary based parameter handling to custom objects using JSON mapping
 
 ### Actionlib ###
 The rosbridge project does not mention any support for the actionlib components. The protocol is listed  [here](https://github.com/RobotWebTools/rosbridge_suite/blob/groovy-devel/ROSBRIDGE_PROTOCOL.md). If this is functionality you're looking for, I suggest connecting with that team.
