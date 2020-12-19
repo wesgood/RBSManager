@@ -27,6 +27,7 @@ RBSManager is a continuation of my previous project, RBManager, to provide an iO
   s.author           = { 'wesgood' => 'w@wesg.ca' }
   s.source           = { :git => 'https://github.com/wesgood/RBSManager.git', :tag => s.version.to_s }
   s.social_media_url = 'https://twitter.com/wesgood'
+  s.swift_version    = '5.0'
 
   s.ios.deployment_target = '10.0'
 
