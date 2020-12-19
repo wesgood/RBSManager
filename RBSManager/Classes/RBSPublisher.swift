@@ -15,7 +15,8 @@ public class RBSPublisher: NSObject {
     public var topic: String
     
     // configuration options
-    public var active: Bool = false
+    public var active: Bool = true
+    public var connected: Bool = false
     public var tag: String?
     
     // ROS specific options
@@ -41,7 +42,7 @@ public class RBSPublisher: NSObject {
     
     /// advertise this publisher on ROS
     public func advertise() {
-        self.active = true
+        self.connected = true
         
         var data = [
             "op" : "advertise",
@@ -60,7 +61,7 @@ public class RBSPublisher: NSObject {
     
     /// remove this publisher from ROS to stop sending messages
     public func unadvertise() {
-        self.active = false
+        self.connected = false
         
         var data = [
             "op" : "unadvertise",

@@ -15,7 +15,8 @@ public class RBSSubscriber: NSObject {
     var callback: ((_ message: RBSMessage) -> (Void))
     
     // configuration options
-    public var active: Bool = false
+    public var active: Bool = true
+    public var connected: Bool = false
     public var tag: String?
     
     // ROS specific options
@@ -35,7 +36,7 @@ public class RBSSubscriber: NSObject {
     
     /// Tell ROSBridge to begin passing messages when they are received
     public func subscribe() {
-        self.active = true
+        self.connected = true
         
         // build the dictionary to send to ROS
         var data = [String : Any]()
@@ -75,7 +76,7 @@ public class RBSSubscriber: NSObject {
     
     /// Tell ROS to stop sending messages
     public func unsubscribe() {
-        self.active = false
+        self.connected = false
         
         var data = [
             "op" : "unsubscribe",

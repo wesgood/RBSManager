@@ -110,7 +110,7 @@ public class RBSManager: NSObject, WebSocketDelegate {
     
     func removePublishers() {
         for publisher in publishers {
-            if publisher.active {
+            if publisher.connected {
                 publisher.unadvertise()
             }
         }
@@ -118,7 +118,7 @@ public class RBSManager: NSObject, WebSocketDelegate {
     
     func removeSubscribers() {
         for subscriber in subscribers {
-            if subscriber.active {
+            if subscriber.connected {
                 subscriber.unsubscribe()
             }
         }
@@ -174,6 +174,10 @@ public class RBSManager: NSObject, WebSocketDelegate {
     
     /// Convert an object to JSON and send through the socket
     func sendData(object: Mappable) {
+        if !connected {
+            return
+        }
+        
         if let jsonString = object.toJSONString(prettyPrint: false) {
             socket?.write(string: jsonString)
         }
@@ -181,6 +185,10 @@ public class RBSManager: NSObject, WebSocketDelegate {
     
     /// Convert a dictionary to JSON and send through the socket
     func sendData(dictionary: [String : Any]) {
+        if !connected {
+            return
+        }
+        
         // ignore the Mapper for now
         if let jsonData = try? JSONSerialization.data(
             withJSONObject: dictionary,
