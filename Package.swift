@@ -14,12 +14,13 @@ let package = Package(
     ],
     dependencies: [
         .package(url: "https://github.com/daltoniam/Starscream.git", from: "3.1.1"),
-        .package(url: "https://github.com/tristanhimmelman/ObjectMapper.git", from: "4.2")
+        .package(url: "https://github.com/tristanhimmelman/ObjectMapper.git", from: "4.2.0")
     ],
     targets: [
         .target(
             name: "RBSManager",
             dependencies: ["Starscream", "ObjectMapper"],
-            path: "RBSManager")
+            path: "RBSManager",
+            sources: ["Classes"])
     ]
 )
