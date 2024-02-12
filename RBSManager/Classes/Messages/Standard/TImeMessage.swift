@@ -21,8 +21,8 @@ public class TimeMessage: RBSMessage {
     }
 
     override public func mapping(map: Map) {
-        sec <- map["secs"]
-        nsec <- map["nsecs"]
+        sec <- map["sec"]
+        nsec <- map["nsec"]
     }
 
     public func date() -> Date {
