@@ -5,7 +5,7 @@
 //  Created by Wes Goodhoofd on 2020-05-11.
 //
 
-import UIKit
+import Foundation
 import ObjectMapper
 
 public class ImageMessage: RBSMessage {
@@ -17,16 +17,16 @@ public class ImageMessage: RBSMessage {
     public var step: UInt32?
     public var data: [UInt8]?
     public var encodedData: String?
-    
+
     public override init() {
         super.init()
         header = HeaderMessage()
     }
-    
+
     public required init?(map: Map) {
         super.init(map: map)
     }
-    
+
     public override func mapping(map: Map) {
         header <- map["header"]
         height <- map["height"]

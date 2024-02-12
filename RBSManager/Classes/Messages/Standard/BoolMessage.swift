@@ -4,14 +4,13 @@
 //  Created by wesgoodhoofd on 2018-09-19.
 //
 
-import UIKit
+import Foundation
 import ObjectMapper
 
 public class BoolMessage: RBSMessage {
-	public var data: Bool = false
-    
+    public var data: Bool = false
 
     public override func mapping(map: Map) {
-	    data <- map["data"]
+        data <- map["data"]
     }
 }

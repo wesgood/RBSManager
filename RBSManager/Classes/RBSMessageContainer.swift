@@ -5,7 +5,7 @@
 //  Created by Wes Goodhoofd on 2018-01-06.
 //
 
-import UIKit
+import Foundation
 import ObjectMapper
 
 public class RBSMessageContainer: NSObject, Mappable {
@@ -13,16 +13,16 @@ public class RBSMessageContainer: NSObject, Mappable {
     var msg: RBSMessage?
     var topic: String?
     var publisherId: String?
-    
+
     required public init?(map: Map) {
-    
+
     }
-    
-    init(_ msg: RBSMessage, topic t: String) {
-        self.msg = msg
-        self.topic = t
+
+    init(message: RBSMessage, topic: String) {
+        self.msg = message
+        self.topic = topic
     }
-    
+
     public func mapping(map: Map) {
         self.op <- map["op"]
         self.msg <- map["msg"]

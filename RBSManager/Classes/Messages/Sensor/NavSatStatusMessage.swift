@@ -5,7 +5,7 @@
 //  Created by Wes Goodhoofd on 2019-07-13.
 //
 
-import UIKit
+import Foundation
 import ObjectMapper
 
 public enum NavSatStatus: Int8 {
@@ -25,7 +25,7 @@ public enum NavSatService: UInt16 {
 public class NavSatStatusMessage: RBSMessage {
     public var service: NavSatService!
     public var status: NavSatStatus!
-    
+
     override public func mapping(map: Map) {
         service <- map["service"]
         status <- map["status"]

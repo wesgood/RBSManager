@@ -4,17 +4,17 @@
 //  Created by wesgoodhoofd on 2018-09-19.
 //
 
-import UIKit
+import Foundation
 import ObjectMapper
 
 public class MultiArrayDimensionMessage: RBSMessage {
-	public var label: String?
-	public var size: UInt32 = 0
-	public var stride: UInt32 = 0
+    public var label: String?
+    public var size: UInt32 = 0
+    public var stride: UInt32 = 0
 
     public override func mapping(map: Map) {
-	    label <- map["label"]
-		size <- map["size"]
-		stride <- map["stride"]
+        label <- map["label"]
+        size <- map["size"]
+        stride <- map["stride"]
     }
 }

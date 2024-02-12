@@ -5,7 +5,7 @@
 //  Created by Wes Goodhoofd on 2019-08-04.
 //
 
-import UIKit
+import Foundation
 import ObjectMapper
 
 public enum ROSBridgeOperation: String {
@@ -19,11 +19,11 @@ public class RBSResponse: NSObject, Mappable {
     public var operation: ROSBridgeOperation?
     public var result: Int?
     public var values: Any?
-    public var message: [String : Any]?
-    
+    public var message: [String: Any]?
+
     required public init?(map: Map) {
     }
-    
+
     public func mapping(map: Map) {
         service <- map["service"]
         topic <- map["topic"]
@@ -33,9 +33,9 @@ public class RBSResponse: NSObject, Mappable {
         values <- map["values"]
         message <- map["msg"]
     }
-    
+
     public func getFloatParameter() -> Float? {
-        if let valuesObject = values as? [String : Any] {
+        if let valuesObject = values as? [String: Any] {
             if let value = valuesObject["value"] as? NSString, value.lowercased != "null" {
                 return value.floatValue
             } else {
@@ -45,9 +45,9 @@ public class RBSResponse: NSObject, Mappable {
             return nil
         }
     }
-    
+
     public func getStringParameter() -> String? {
-        if let valuesObject = values as? [String : Any] {
+        if let valuesObject = values as? [String: Any] {
             if let value = valuesObject["value"] as? String {
                 return value
             } else {

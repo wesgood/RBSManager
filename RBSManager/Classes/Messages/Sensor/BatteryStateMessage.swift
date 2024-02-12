@@ -5,15 +5,15 @@
 //  Created by Wes Goodhoofd on 2019-07-26.
 //
 
-import UIKit
+import Foundation
 import ObjectMapper
 
 public enum PowerSupplyStatus: UInt8 {
-    case POWER_SUPPLY_STATUS_UNKNOWN = 0
-    case POWER_SUPPLY_STATUS_CHARGING
-    case POWER_SUPPLY_STATUS_DISCHARGING
-    case POWER_SUPPLY_STATUS_NOT_CHARGING
-    case POWER_SUPPLY_STATUS_FULL
+    case PowerSupplyStatusUnknown = 0
+    case PowerSupplyStatusCharging
+    case PowerSupplyStatusDISCHARGING
+    case PowerSupplyStatusNOT_CHARGING
+    case PowerSupplyStatusFULL
 }
 
 public enum PowerSupplyHealth: UInt8 {
@@ -47,22 +47,22 @@ public class BatteryStateMessage: RBSMessage {
     public var design_capacity: Float32 = 0
     public var percentage: Float32 = 0
     public var power_supply_health: PowerSupplyHealth = .POWER_SUPPLY_HEALTH_UNKNOWN
-    public var power_supply_status: PowerSupplyStatus = .POWER_SUPPLY_STATUS_UNKNOWN
+    public var power_supply_status: PowerSupplyStatus = .PowerSupplyStatusUnknown
     public var power_supply_technology: PowerSupplyTechnology = .POWER_SUPPLY_TECHNOLOGY_UNKNOWN
     public var present: Bool = false
     public var cell_voltage: [Float32]?
     public var location: String?
     public var serial_number: String?
-    
+
     public override init() {
         super.init()
         header = HeaderMessage()
     }
-    
+
     public required init?(map: Map) {
         super.init(map: map)
     }
-    
+
     override public func mapping(map: Map) {
         header <- map["header"]
         voltage <- map["voltage"]
@@ -75,7 +75,7 @@ public class BatteryStateMessage: RBSMessage {
         power_supply_status <- map["power_supply_status"]
         power_supply_technology <- map["power_supply_technology"]
         present <- map["present"]
-        //cell_voltage <- map["cell_voltage"]
+        // cell_voltage <- map["cell_voltage"]
         location <- map["location"]
         serial_number <- map["serial_number"]
     }
