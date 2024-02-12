@@ -16,10 +16,10 @@ public enum NavSatStatus: Int8 {
 }
 
 public enum NavSatService: UInt16 {
-    case serviceGps =     1
+    case serviceGps = 1
     case serviceGlonass = 2
-    case serviceCompanss = 4
-    case serviceGalileio = 8
+    case serviceCompass = 4
+    case serviceGalileo = 8
 }
 
 public class NavSatStatusMessage: RBSMessage {

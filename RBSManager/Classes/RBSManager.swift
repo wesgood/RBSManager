@@ -18,11 +18,11 @@ public protocol RBSManagerDelegate {
 }
 
 public enum RBSManagerError: Int {
-    case invalidUrl = 500,
-    socketError,
-    timeoutError,
-    jsonSerializerError,
-    jsonDeserializerError
+    case invalidUrl = 500
+    case socketError
+    case timeoutError
+    case jsonSerializerError
+    case jsonDeserializerError
 }
 
 public class RBSManager: NSObject, WebSocketDelegate {
