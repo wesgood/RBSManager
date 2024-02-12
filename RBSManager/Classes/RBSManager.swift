@@ -26,7 +26,6 @@ public enum RBSManagerError: Int {
 }
 
 public class RBSManager: NSObject, WebSocketDelegate {
-
     var socket: WebSocket!
     public var delegate: RBSManagerDelegate?
     public var host: String?
@@ -282,8 +281,11 @@ public class RBSManager: NSObject, WebSocketDelegate {
     }
 
     public func websocketDidReceiveData(socket: WebSocketClient, data: Data) {
-
     }
+
+    public func didReceive(event: WebSocketEvent, client: Starscream.WebSocketClient) {
+    }
+
 
     // MARK: - Accessors
 
