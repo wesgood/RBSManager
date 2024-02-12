@@ -9,33 +9,33 @@ import Foundation
 import ObjectMapper
 
 public enum PowerSupplyStatus: UInt8 {
-    case PowerSupplyStatusUnknown = 0
-    case PowerSupplyStatusCharging
-    case PowerSupplyStatusDISCHARGING
-    case PowerSupplyStatusNOT_CHARGING
-    case PowerSupplyStatusFULL
+    case powerSupplyStatusUnknown = 0
+    case powerSupplyStatusCharging
+    case powerSupplyStatusDischarging
+    case powerSupplyStatusNotCharging
+    case powerSupplyStatusFull
 }
 
 public enum PowerSupplyHealth: UInt8 {
-    case POWER_SUPPLY_HEALTH_UNKNOWN = 0
-    case POWER_SUPPLY_HEALTH_GOOD = 1
-    case POWER_SUPPLY_HEALTH_OVERHEAT = 2
-    case POWER_SUPPLY_HEALTH_DEAD = 3
-    case POWER_SUPPLY_HEALTH_OVERVOLTAGE = 4
-    case POWER_SUPPLY_HEALTH_UNSPEC_FAILURE = 5
-    case POWER_SUPPLY_HEALTH_COLD = 6
-    case POWER_SUPPLY_HEALTH_WATCHDOG_TIMER_EXPIRE = 7
-    case POWER_SUPPLY_HEALTH_SAFETY_TIMER_EXPIRE = 8
+    case powerSupplyHealthUnknown = 0
+    case powerSupplyHealthGood = 1
+    case powerSupplyHealthOverheat = 2
+    case powerSupplyHealthDead = 3
+    case powerSupplyHealthOverVoltage = 4
+    case powerSupplyHealthUnspecFailure = 5
+    case powerSupplyHealthCold = 6
+    case powerSupplyHealthWatchdogTimerExpire = 7
+    case powerSupplyHealthSafetyTimerExpire = 8
 }
 
 public enum PowerSupplyTechnology: UInt8 {
-    case POWER_SUPPLY_TECHNOLOGY_UNKNOWN = 0
-    case POWER_SUPPLY_TECHNOLOGY_NIMH = 1
-    case POWER_SUPPLY_TECHNOLOGY_LION = 2
-    case POWER_SUPPLY_TECHNOLOGY_LIPO = 3
-    case POWER_SUPPLY_TECHNOLOGY_LIFE = 4
-    case POWER_SUPPLY_TECHNOLOGY_NICD = 5
-    case POWER_SUPPLY_TECHNOLOGY_LIMN = 6
+    case powerSupplyTechnologyUnknown = 0
+    case powerSupplyTechnologyNIMH = 1
+    case powerSupplyTechnologyLION = 2
+    case powerSupplyTechnologyLIPO = 3
+    case powerSupplyTechnologyLIFE = 4
+    case powerSupplyTechnologyNICD = 5
+    case powerSupplyTechnologyLIMN = 6
 }
 
 public class BatteryStateMessage: RBSMessage {
@@ -44,15 +44,15 @@ public class BatteryStateMessage: RBSMessage {
     public var current: Float32 = 0
     public var charge: Float32 = 0
     public var capacity: Float32 = 0
-    public var design_capacity: Float32 = 0
+    public var designCapacity: Float32 = 0
     public var percentage: Float32 = 0
-    public var power_supply_health: PowerSupplyHealth = .POWER_SUPPLY_HEALTH_UNKNOWN
-    public var power_supply_status: PowerSupplyStatus = .PowerSupplyStatusUnknown
-    public var power_supply_technology: PowerSupplyTechnology = .POWER_SUPPLY_TECHNOLOGY_UNKNOWN
+    public var powerSupplyHealth: PowerSupplyHealth = .powerSupplyHealthUnknown
+    public var powerSupplyStatus: PowerSupplyStatus = .powerSupplyStatusUnknown
+    public var powerSupplyTechnology: PowerSupplyTechnology = .powerSupplyTechnologyUnknown
     public var present: Bool = false
-    public var cell_voltage: [Float32]?
+    public var cellVoltage: [Float32]?
     public var location: String?
-    public var serial_number: String?
+    public var serialNumber: String?
 
     public override init() {
         super.init()
@@ -69,14 +69,14 @@ public class BatteryStateMessage: RBSMessage {
         current <- map["current"]
         charge <- map["charge"]
         capacity <- map["capacity"]
-        design_capacity <- map["design_capacity"]
+        designCapacity <- map["design_capacity"]
         percentage <- map["percentage"]
-        power_supply_health <- map["power_supply_health"]
-        power_supply_status <- map["power_supply_status"]
-        power_supply_technology <- map["power_supply_technology"]
+        powerSupplyHealth <- map["power_supply_health"]
+        powerSupplyStatus <- map["power_supply_status"]
+        powerSupplyTechnology <- map["power_supply_technology"]
         present <- map["present"]
         // cell_voltage <- map["cell_voltage"]
         location <- map["location"]
-        serial_number <- map["serial_number"]
+        serialNumber <- map["serial_number"]
     }
 }

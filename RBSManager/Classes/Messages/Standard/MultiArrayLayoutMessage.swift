@@ -9,7 +9,7 @@ import ObjectMapper
 
 public class MultiArrayLayoutMessage: RBSMessage {
     public var dim: [MultiArrayDimensionMessage]?
-    public var data_offset: UInt32 = 0
+    public var dataOffset: UInt32 = 0
 
     public override init() {
         super.init()
@@ -22,6 +22,6 @@ public class MultiArrayLayoutMessage: RBSMessage {
 
     public override func mapping(map: Map) {
         dim <- map["dim"]
-        data_offset <- map["data_offset"]
+        dataOffset <- map["data_offset"]
     }
 }

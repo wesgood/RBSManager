@@ -10,10 +10,10 @@ import ObjectMapper
 import CoreLocation
 
 public enum PositionCovarianceType: UInt8 {
-    case COVARIANCE_TYPE_UNKNOWN = 0
-    case COVARIANCE_TYPE_APPROXIMATED = 1
-    case COVARIANCE_TYPE_DIAGONAL_KNOWN = 2
-    case COVARIANCE_TYPE_KNOWN = 3
+    case covarianceTypeUnknown = 0
+    case covarianceTypeApproximated = 1
+    case covarianceTypeDiagnonalKnown = 2
+    case covarianceTypeKnown = 3
 }
 
 public class NavSatFixMessage: RBSMessage {
@@ -22,8 +22,8 @@ public class NavSatFixMessage: RBSMessage {
     public var latitude: Float64 = 0
     public var longitude: Float64 = 0
     public var altitude: Float64 = 0
-    public var position_covariance: [Float64]?
-    public var position_covariance_type: PositionCovarianceType?
+    public var positionCovariance: [Float64]?
+    public var positionCovarianceType: PositionCovarianceType?
 
     public override init() {
         super.init()
@@ -41,8 +41,8 @@ public class NavSatFixMessage: RBSMessage {
         latitude <- map["latitude"]
         longitude <- map["longitude"]
         altitude <- map["altitude"]
-        position_covariance <- map["position_covariance"]
-        position_covariance_type <- map["position_covariance_type"]
+        positionCovariance <- map["position_covariance"]
+        positionCovarianceType <- map["position_covariance_type"]
     }
 
     public func latitudeLabel() -> String? {
@@ -61,7 +61,7 @@ public class NavSatFixMessage: RBSMessage {
 
     public func hasFix() -> Bool {
         if let fix = status?.status {
-            return fix.rawValue > NavSatStatus.STATUS_NO_FIX.rawValue
+            return fix.rawValue > NavSatStatus.statusNoFix.rawValue
         } else {
             return false
         }

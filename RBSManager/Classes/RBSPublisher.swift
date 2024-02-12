@@ -22,16 +22,16 @@ public class RBSPublisher: NSObject {
     // ROS specific options
     public var publisherId: String?
 
-    init(manager m: RBSManager, topic t: String, messageType mt: String, messageClass mc: RBSMessage.Type) {
-        self.manager = m
-        self.topic = t
-        self.messageClass = mc
-        self.messageType = mt
+    init(manager: RBSManager, topic: String, messageType: String, messageClass: RBSMessage.Type) {
+        self.manager = manager
+        self.topic = topic
+        self.messageClass = messageClass
+        self.messageType = messageType
     }
 
     /// add the message to a container and send to manager for transmit
     public func publish(_ message: RBSMessage) {
-        let container = RBSMessageContainer(message, topic: topic)
+        let container = RBSMessageContainer(message: message, topic: topic)
 
         if let publisherIdOption = publisherId {
             container.publisherId = publisherIdOption

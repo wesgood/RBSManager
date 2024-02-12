@@ -15,7 +15,7 @@ public enum ROSBridgeOperation: String {
 public class RBSResponse: NSObject, Mappable {
     public var service: String?
     public var topic: String?
-    public var id: String?
+    public var responseId: String?
     public var operation: ROSBridgeOperation?
     public var result: Int?
     public var values: Any?
@@ -27,7 +27,7 @@ public class RBSResponse: NSObject, Mappable {
     public func mapping(map: Map) {
         service <- map["service"]
         topic <- map["topic"]
-        id <- map["id"]
+        responseId <- map["id"]
         operation <- map["op"]
         result <- map["result"]
         values <- map["values"]

@@ -18,7 +18,11 @@ public protocol RBSManagerDelegate {
 }
 
 public enum RBSManagerError: Int {
-    case InvalidUrl = 500, SocketError, TimeoutError, JSONSerializerError, JSONDeserializerError
+    case invalidUrl = 500,
+    socketError,
+    timeoutError,
+    jsonSerializerError,
+    jsonDeserializerError
 }
 
 public class RBSManager: NSObject, WebSocketDelegate {
@@ -93,34 +97,26 @@ public class RBSManager: NSObject, WebSocketDelegate {
     }
 
     func advertisePublishers() {
-        for publisher in publishers {
-            if publisher.active {
-                publisher.advertise()
-            }
+        for publisher in publishers where publisher.active {
+            publisher.advertise()
         }
     }
 
     func attachSubscribers() {
-        for subscriber in subscribers {
-            if subscriber.active {
-                subscriber.subscribe()
-            }
+        for subscriber in subscribers where subscriber.active {
+            subscriber.subscribe()
         }
     }
 
     func removePublishers() {
-        for publisher in publishers {
-            if publisher.connected {
-                publisher.unadvertise()
-            }
+        for publisher in publishers where publisher.connected {
+            publisher.unadvertise()
         }
     }
 
     func removeSubscribers() {
-        for subscriber in subscribers {
-            if subscriber.connected {
-                subscriber.unsubscribe()
-            }
+        for subscriber in subscribers where subscriber.connected {
+            subscriber.unsubscribe()
         }
     }
 
@@ -141,7 +137,7 @@ public class RBSManager: NSObject, WebSocketDelegate {
                     // send the delegate method
                     self.connected = false
                     self.socket = nil
-                    let error = self.createError("Connection timed out", code: RBSManagerError.TimeoutError.rawValue)
+                    let error = self.createError("Connection timed out", code: RBSManagerError.timeoutError.rawValue)
                     self.delegate?.manager(self, threwError: error)
                 })
             }
@@ -154,7 +150,7 @@ public class RBSManager: NSObject, WebSocketDelegate {
             self.socket.delegate = self
             self.socket.connect()
         } else {
-            let error = createError("requested websocket URL is invalid", code: RBSManagerError.InvalidUrl.rawValue)
+            let error = createError("requested websocket URL is invalid", code: RBSManagerError.invalidUrl.rawValue)
             self.delegate?.manager(self, threwError: error)
         }
     }
@@ -197,7 +193,7 @@ public class RBSManager: NSObject, WebSocketDelegate {
                 socket?.write(string: jsonString)
             }
         } else {
-            let error = createError("unable to generate JSON", code: RBSManagerError.JSONSerializerError.rawValue)
+            let error = createError("unable to generate JSON", code: RBSManagerError.jsonSerializerError.rawValue)
             self.delegate?.manager(self, threwError: error)
         }
     }
@@ -209,23 +205,21 @@ public class RBSManager: NSObject, WebSocketDelegate {
 
     func postSubscriberData(_ response: RBSResponse) {
         // map the provided dictionary into the correct models
-        for subscriber in subscribers {
-            if subscriber.topic == response.topic {
-                // use the provided message type to generate a new instance
-                let messageType = subscriber.messageClass
-                if let messageData = response.message {
-                    let map = Map.init(mappingType: .fromJSON, JSON: messageData)
-                    if let message = messageType.init(map: map) {
-                        DispatchQueue.main.async {
-                            subscriber.callback(message)
-                        }
-                    } else {
-                        let error =
-                            createError("cannot create object of type \(String(describing: messageType.description))",
-                            code: RBSManagerError.JSONDeserializerError.rawValue)
-                        DispatchQueue.main.async {
-                            self.delegate?.manager(self, threwError: error)
-                        }
+        for subscriber in subscribers where subscriber.topic == response.topic {
+            // use the provided message type to generate a new instance
+            let messageType = subscriber.messageClass
+            if let messageData = response.message {
+                let map = Map.init(mappingType: .fromJSON, JSON: messageData)
+                if let message = messageType.init(map: map) {
+                    DispatchQueue.main.async {
+                        subscriber.callback(message)
+                    }
+                } else {
+                    let error =
+                        createError("cannot create object of type \(String(describing: messageType.description))",
+                        code: RBSManagerError.jsonDeserializerError.rawValue)
+                    DispatchQueue.main.async {
+                        self.delegate?.manager(self, threwError: error)
                     }
                 }
             }
@@ -236,13 +230,13 @@ public class RBSManager: NSObject, WebSocketDelegate {
         // map the provided dictionary into the correct models
         var toRemove = [Int]()
 
-        for (i, serviceCall) in serviceCalls.enumerated() {
-            if ((serviceCall.serviceId != nil && serviceCall.serviceId == response.id) ||
+        for (index, serviceCall) in serviceCalls.enumerated() {
+            if ((serviceCall.serviceId != nil && serviceCall.serviceId == response.responseId) ||
                 serviceCall.serviceId == nil) && serviceCall.service == response.service {
                 DispatchQueue.main.async {
                     serviceCall.responseCallback?(response)
                 }
-                toRemove.append(i)
+                toRemove.append(index)
                 break
             }
         }
@@ -299,8 +293,8 @@ public class RBSManager: NSObject, WebSocketDelegate {
     ///   - topic: the topic string
     ///   - id: the optional subscriber ID
     /// - Returns: nil or matching subscriber object
-    public func getSubscriber(topic: String, id: String? = nil) -> RBSSubscriber? {
-        let filtered = subscribers.filter({ return topic == $0.topic && $0.subscriberId == id })
+    public func getSubscriber(topic: String, subscriberId: String? = nil) -> RBSSubscriber? {
+        let filtered = subscribers.filter({ return topic == $0.topic && $0.subscriberId == subscriberId })
         return filtered.first
     }
 
@@ -310,8 +304,8 @@ public class RBSManager: NSObject, WebSocketDelegate {
     ///   - topic: the topic string
     ///   - id: the optional publisher ID
     /// - Returns: nil or matching publisher object
-    public func getPublisher(topic: String, id: String? = nil) -> RBSPublisher? {
-        let filtered = publishers.filter({ return topic == $0.topic && $0.publisherId == id })
+    public func getPublisher(topic: String, publisherId: String? = nil) -> RBSPublisher? {
+        let filtered = publishers.filter({ return topic == $0.topic && $0.publisherId == publisherId })
         return filtered.first
     }
 
@@ -321,8 +315,8 @@ public class RBSManager: NSObject, WebSocketDelegate {
     ///   - service: the topic string
     ///   - id: the optional publisher ID
     /// - Returns: nil or matching service call
-    public func getServiceCall(service: String, id: String? = nil) -> RBSServiceCall? {
-        let filtered = serviceCalls.filter({ return service == $0.service && $0.serviceId == id })
+    public func getServiceCall(service: String, serviceId: String? = nil) -> RBSServiceCall? {
+        let filtered = serviceCalls.filter({ return service == $0.service && $0.serviceId == serviceId })
         return filtered.first
     }
 

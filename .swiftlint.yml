@@ -1,0 +1,6 @@
+identifier_name:
+  excluded:
+    - x
+    - y
+    - z
+    - w

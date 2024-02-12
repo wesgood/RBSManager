@@ -9,17 +9,17 @@ import Foundation
 import ObjectMapper
 
 public enum NavSatStatus: Int8 {
-    case STATUS_NO_FIX = -1
-    case STATUS_FIX
-    case STATUS_SBAS_FIX
-    case STATUS_GBAS_FIX
+    case statusNoFix = -1
+    case statusFix
+    case statusSbasFix
+    case statusGbasFix
 }
 
 public enum NavSatService: UInt16 {
-    case SERVICE_GPS =     1
-    case SERVICE_GLONASS = 2
-    case SERVICE_COMPASS = 4
-    case SERVICE_GALILEO = 8
+    case serviceGps =     1
+    case serviceGlonass = 2
+    case serviceCompanss = 4
+    case serviceGalileio = 8
 }
 
 public class NavSatStatusMessage: RBSMessage {

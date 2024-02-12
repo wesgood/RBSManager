@@ -9,8 +9,8 @@ import Foundation
 import ObjectMapper
 
 public class RBSMessageContainer: NSObject, Mappable {
-    var op = "publish"
-    var msg: RBSMessage?
+    var operation = "publish"
+    var message: RBSMessage?
     var topic: String?
     var publisherId: String?
 
@@ -19,13 +19,13 @@ public class RBSMessageContainer: NSObject, Mappable {
     }
 
     init(message: RBSMessage, topic: String) {
-        self.msg = message
+        self.message = message
         self.topic = topic
     }
 
     public func mapping(map: Map) {
-        self.op <- map["op"]
-        self.msg <- map["msg"]
+        self.operation <- map["op"]
+        self.message <- map["msg"]
         self.topic <- map["topic"]
         self.publisherId <- map["id"]
     }
