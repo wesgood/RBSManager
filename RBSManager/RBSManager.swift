@@ -11,7 +11,7 @@ import ObjectMapper
 
 private let _sharedManager = RBSManager()
 
-public protocol RBSManagerDelegate {
+public protocol RBSManagerDelegate: AnyObject {
     func manager(_ manager: RBSManager, didDisconnect error: Error?)
     func managerDidConnect(_ manager: RBSManager)
     func manager(_ manager: RBSManager, threwError error: Error)
@@ -136,7 +136,7 @@ public class RBSManager: NSObject, WebSocketDelegate {
                     // send the delegate method
                     self.connected = false
                     self.socket = nil
-                    let error = self.createError("Connection timed out", code: RBSManagerError.timeoutError.rawValue)
+                    let error = self.createError("connection timed out", code: RBSManagerError.timeoutError.rawValue)
                     self.delegate?.manager(self, threwError: error)
                 })
             }
@@ -249,8 +249,8 @@ public class RBSManager: NSObject, WebSocketDelegate {
     // MARK: WebSocket delegate methods
 
     public func websocketDidConnect(socket: WebSocketClient) {
-        self.connected = true
         self.timeoutTimer?.invalidate()
+        self.connected = true
         self.advertisePublishers()
         self.attachSubscribers()
         DispatchQueue.main.async {
@@ -282,10 +282,6 @@ public class RBSManager: NSObject, WebSocketDelegate {
 
     public func websocketDidReceiveData(socket: WebSocketClient, data: Data) {
     }
-
-    public func didReceive(event: WebSocketEvent, client: Starscream.WebSocketClient) {
-    }
-
 
     // MARK: - Accessors
 

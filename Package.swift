@@ -12,7 +12,7 @@ let package = Package(
             targets: ["RBSManager"])
     ],
     dependencies: [
-        .package(url: "https://github.com/daltoniam/Starscream.git", from: "4.0.0"),
+        .package(url: "https://github.com/daltoniam/Starscream.git", from: "3.1.1"),
         .package(url: "https://github.com/tristanhimmelman/ObjectMapper.git", from: "4.2.0"),
         .package(url: "https://github.com/adamayoung/swiftlint-plugin.git", from: "0.51.0")
     ],
@@ -20,7 +20,7 @@ let package = Package(
         .target(
             name: "RBSManager",
             dependencies: ["Starscream", "ObjectMapper"],
-            path: "RBSManager", sources: ["Classes"],
+            path: ".", sources: ["RBSManager"],
             plugins: [
                 .plugin(name: "SwiftLintPlugin", package: "swiftlint-plugin")
             ])
